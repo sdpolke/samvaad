@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# Setup script for using pipecat as a git submodule.
+# Setup script for installing Python dependencies, including vendored pipecat.
 #
 # Usage:
 #   ./scripts/setup_requirements.sh           # default: install runtime deps
-#   ./scripts/setup_requirements.sh --dev     # also install pipecat dev deps;
-#                                        # skips git submodule update (CI
-#                                        # already checks out submodules).
+#   ./scripts/setup_requirements.sh --dev     # also install pipecat dev deps
 
 set -euo pipefail
 
@@ -32,12 +30,12 @@ DOGRAH_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$DOGRAH_DIR"
 
-echo "Setting up pipecat as a git submodule..."
-
-if [ "$DEV_MODE" -eq 0 ]; then
-    echo "Initializing git submodules..."
-    git submodule update --init --recursive
+if [[ ! -f pipecat/pyproject.toml ]]; then
+    echo "Error: pipecat/ is missing. Clone the full repository." >&2
+    exit 1
 fi
+
+echo "Setting up Python requirements..."
 
 # Install dograh API requirements first so pipecat's extras win on any
 # shared transitive dependencies (matches api/Dockerfile and CI workflow).

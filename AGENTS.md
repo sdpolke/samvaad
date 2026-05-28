@@ -15,7 +15,7 @@ dograh/
 ├── ui/               # Frontend - Next.js application
 ├── scripts/          # Helper scripts for local development
 ├── docs/             # Mintlify documentation
-├── pipecat/          # Pipecat framework (git submodule)
+├── pipecat/          # Pipecat framework (vendored in-repo)
 ├── docker-compose.yaml       # Production/OSS deployment
 ├── docker-compose-local.yaml # Local development services
 ```

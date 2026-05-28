@@ -48,7 +48,6 @@ if [[ -f docker-compose.override.yaml ]]; then
     echo ""
     echo -e "  ${BLUE}git fetch${NC}"
     echo -e "  ${BLUE}git checkout <tag>      # or: git pull${NC}"
-    echo -e "  ${BLUE}git submodule update --init --recursive${NC}"
     echo -e "  ${BLUE}./remote_up.sh --build${NC}"
     echo ""
     echo -e "${YELLOW}See https://docs.dograh.com/deployment/update#updating-a-source-build${NC}"

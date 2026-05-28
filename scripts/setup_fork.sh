@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Contributor bootstrap. Run this once after cloning your fork.
 # Configures git remotes (origin = your fork, upstream = dograh-hq/dograh),
-# initializes the pipecat submodule, creates the Python venv, and copies
+# creates the Python venv, and copies
 # the .env templates.
 
 set -e
@@ -31,7 +31,7 @@ echo ""
 ### 1) Configure git remotes
 ###############################################################################
 
-echo -e "${BLUE}[1/4] Configuring git remotes${NC}"
+echo -e "${BLUE}[1/3] Configuring git remotes${NC}"
 
 current_origin=$(git remote get-url origin 2>/dev/null || echo "")
 canonical_https="https://github.com/dograh-hq/dograh.git"
@@ -87,19 +87,10 @@ git remote -v
 echo ""
 
 ###############################################################################
-### 2) Initialize submodules
+### 2) Python venv
 ###############################################################################
 
-echo -e "${BLUE}[2/4] Initializing pipecat submodule${NC}"
-git submodule update --init --recursive
-echo -e "${GREEN}✓ submodules initialized${NC}"
-echo ""
-
-###############################################################################
-### 3) Python venv
-###############################################################################
-
-echo -e "${BLUE}[3/4] Python virtual environment${NC}"
+echo -e "${BLUE}[2/3] Python virtual environment${NC}"
 VENV_PATH="$BASE_DIR/venv"
 
 if [[ -d "$VENV_PATH" && -f "$VENV_PATH/bin/activate" ]]; then
@@ -125,7 +116,7 @@ echo ""
 ### 4) .env files
 ###############################################################################
 
-echo -e "${BLUE}[4/4] Environment files${NC}"
+echo -e "${BLUE}[3/3] Environment files${NC}"
 for pair in "api/.env.example|api/.env" "ui/.env.example|ui/.env"; do
     src="${pair%|*}"
     dst="${pair#*|}"

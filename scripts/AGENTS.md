@@ -6,7 +6,7 @@ Most contributor-facing scripts ship as a `.sh` + `.ps1` pair so macOS/Linux and
 
 Current pairs:
 
-- `setup_fork.{sh,ps1}` — contributor bootstrap (git remotes, submodule, venv, env files)
+- `setup_fork.{sh,ps1}` — contributor bootstrap (git remotes, venv, env files)
 - `setup_requirements.{sh,ps1}` — Python + pipecat dependency install
 - `start_services_dev.{sh,ps1}` — local backend launcher (auto-reload + health-check wait)
 - `stop_services.{sh,ps1}`

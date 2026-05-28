@@ -206,7 +206,7 @@ if [[ "$DEPLOY_MODE" == "build" ]]; then
             dograh_fail "'dograh' directory already exists. Remove it or re-run with REPO_SOURCE=existing from inside it."
         fi
         echo -e "${BLUE}[1/$TOTAL] Cloning $FORK_REPO (branch: $BRANCH)...${NC}"
-        git clone --branch "$BRANCH" --recurse-submodules "https://github.com/$FORK_REPO.git" dograh
+        git clone --branch "$BRANCH" "https://github.com/$FORK_REPO.git" dograh
         cd dograh
         echo -e "${GREEN}✓ Repo cloned${NC}"
     else

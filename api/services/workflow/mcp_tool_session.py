@@ -90,7 +90,7 @@ class McpToolSession:
             )
             self._client = MCPClient(params, tools_filter=self._tools_filter)
             await self._client.start()
-            # Single, isolated touch of Pipecat internals (vendored submodule).
+            # Single, isolated touch of Pipecat internals (vendored in-repo).
             self._session = self._client._active_session
             tools_schema = await self._client.get_tools_schema()
 

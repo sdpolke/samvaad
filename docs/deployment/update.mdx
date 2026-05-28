@@ -124,17 +124,10 @@ git pull
 # Or pin to a specific release (git tag format is dograh-vX.Y.Z):
 git checkout dograh-v1.28.0
 
-# Pick up pipecat and other submodule bumps
-git submodule update --init --recursive
-
 # Rebuild and restart
 sudo docker compose --profile remote build
 sudo docker compose --profile remote up -d
 ```
-
-<Warning>
-If you update the `pipecat` submodule, you **must** run `git submodule update --init --recursive` before rebuilding, or the Docker build will not pick up `pipecat` changes.
-</Warning>
 
 If you maintain a fork with local customizations on top of upstream, merging conflicts in `docker-compose.yaml`, `remote_up.sh`, `scripts/run_dograh_init.sh`, `deploy/templates/*`, or `setup_remote.sh` is up to you — resolve them as you would any other git merge. Leave `OSS_JWT_SECRET` and `TURN_SECRET` in `.env` unchanged across updates to preserve sessions and WebRTC auth.
 

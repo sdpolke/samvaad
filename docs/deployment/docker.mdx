@@ -202,7 +202,7 @@ In this mode the script:
 
 #### Updating after a code change
 
-Whenever the codebase changes — a `git pull`, a local edit, or a submodule bump — rebuild the `api` and `ui` images and recreate the running containers so they pick up the new code.
+Whenever the codebase changes — a `git pull` or a local edit — rebuild the `api` and `ui` images and recreate the running containers so they pick up the new code.
 
 **TL;DR (rebuilds both services and restarts in one shot):**
 
@@ -220,7 +220,6 @@ cd dograh
 
 # 1. Pull the latest source.
 git pull
-git submodule update --init --recursive   # picks up pipecat submodule bumps
 
 # 2. Rebuild both images.
 sudo docker compose --profile remote build api ui
@@ -228,8 +227,6 @@ sudo docker compose --profile remote build api ui
 # 3. Recreate the running containers so they use the new images.
 sudo docker compose --profile remote up -d
 ```
-
-<Warning>If you update `pipecat` submodule, you must do `git submodule update --init --recursive`, or the Docker build step will not pick up `pipecat` changes</Warning>
 
 **Rebuild a single service** — faster when you only changed one side:
 

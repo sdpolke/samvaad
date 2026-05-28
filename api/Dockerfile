@@ -18,7 +18,7 @@ RUN pip install --user --no-cache-dir -r requirements.txt && \
     # Clean up pip cache after installation
     rm -rf /root/.cache/pip
 
-# Copy and install pipecat from local submodule
+# Copy and install pipecat from vendored source
 COPY pipecat /tmp/pipecat
 RUN pip install --user --no-cache-dir '/tmp/pipecat[cartesia,deepgram,openai,elevenlabs,groq,google,azure,sarvam,soundfile,silero,webrtc,speechmatics,openrouter,camb,mcp]' && \
     # Swap opencv-python (pulled by pipecat[webrtc]) for opencv-python-headless

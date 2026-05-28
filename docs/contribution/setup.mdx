@@ -18,12 +18,12 @@ All commands below are shown for **macOS / Linux**. Expand the **Windows** tab f
 
 ### Steps
 1. Fork the Dograh repository by going to https://github.com/dograh-hq/dograh
-2. Clone **your fork** on your machine. You can skip `--recurse-submodules` here — the bootstrap script in the next step will initialize submodules for you.
+2. Clone **your fork** on your machine.
 ```
 git clone https://github.com/<GITHUB_HANDLE>/dograh
 cd dograh
 ```
-3. Run the contributor bootstrap. It configures `origin` (your fork) and `upstream` (`dograh-hq/dograh`), initializes the pipecat submodule, creates the Python venv, and copies the `.env` templates. Re-running it is safe — already-configured pieces are skipped.
+3. Run the contributor bootstrap. It configures `origin` (your fork) and `upstream` (`dograh-hq/dograh`), creates the Python venv, and copies the `.env` templates. Re-running it is safe — already-configured pieces are skipped.
 <CodeGroup>
 ```bash macOS/Linux
 bash scripts/setup_fork.sh

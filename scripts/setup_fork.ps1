@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 # Contributor bootstrap (Windows). Run this once after cloning your fork.
 # Configures git remotes (origin = your fork, upstream = dograh-hq/dograh),
-# initializes the pipecat submodule, creates the Python venv, and copies
+# creates the Python venv, and copies
 # the .env templates.
 
 $ErrorActionPreference = 'Stop'
@@ -35,7 +35,7 @@ function Get-RemoteUrl([string]$Name) {
 ### 1) Configure git remotes
 ###############################################################################
 
-Write-Host '[1/4] Configuring git remotes' -ForegroundColor Blue
+Write-Host '[1/3] Configuring git remotes' -ForegroundColor Blue
 
 $currentOrigin = Get-RemoteUrl 'origin'
 
@@ -86,19 +86,10 @@ git remote -v
 Write-Host ''
 
 ###############################################################################
-### 2) Initialize submodules
+### 2) Python venv
 ###############################################################################
 
-Write-Host '[2/4] Initializing pipecat submodule' -ForegroundColor Blue
-git submodule update --init --recursive
-Write-Host 'OK submodules initialized' -ForegroundColor Green
-Write-Host ''
-
-###############################################################################
-### 3) Python venv
-###############################################################################
-
-Write-Host '[3/4] Python virtual environment' -ForegroundColor Blue
+Write-Host '[2/3] Python virtual environment' -ForegroundColor Blue
 $VenvPath = Join-Path $BaseDir 'venv'
 $VenvActivate = Join-Path $VenvPath 'Scripts/Activate.ps1'
 
@@ -126,7 +117,7 @@ Write-Host ''
 ### 4) .env files
 ###############################################################################
 
-Write-Host '[4/4] Environment files' -ForegroundColor Blue
+Write-Host '[3/3] Environment files' -ForegroundColor Blue
 $pairs = @(
     @{ Src = 'api/.env.example'; Dst = 'api/.env' },
     @{ Src = 'ui/.env.example';  Dst = 'ui/.env'  }
