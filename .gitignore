@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+venv/
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node / frontend
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+api/.env
+ui/.env
+
+# OS and editors
+.DS_Store
+.idea/
+*.code-workspace
+
+# Runtime caches and generated audio
+dograh_pcm_cache/
+*.wav
+!api/assets/*.wav
+!pipecat/examples/assets/*.wav
+
+# Deployment / remote install artifacts
+/logs/
+/run/
+/certs/
+coturn/
+infrastructure/
+prd/
+.vercel
+.devcontainer/install.local.sh
+.playwright-mcp
+
+# Local dev data
+campaign_leads.csv
