@@ -152,8 +152,9 @@ class CircuitBreakerConfigResponse(BaseModel):
 class CreateCampaignRequest(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     workflow_id: int
-    source_type: str = Field(..., pattern="^csv$")
-    source_id: str  # CSV file key
+    source_type: str = Field(..., pattern="^(csv|twenty)$")
+    source_id: str  # CSV file key or Twenty object/view identifier
+    source_config: Optional[Dict[str, Any]] = None
     # Optional during the legacy → multi-config migration window. Required in
     # a follow-up. When omitted, the dispatcher falls back to the org's
     # default config.
@@ -358,7 +359,7 @@ async def create_campaign(
     # Validate source data (phone_number column and format)
     sync_service = get_sync_service(request.source_type)
     validation_result = await sync_service.validate_source(
-        request.source_id, user.selected_organization_id
+        request.source_id, user.selected_organization_id, request.source_config
     )
     if not validation_result.is_valid:
         raise HTTPException(status_code=400, detail=validation_result.error.message)
@@ -450,6 +451,7 @@ async def create_campaign(
         max_concurrency=request.max_concurrency,
         schedule_config=schedule_config,
         circuit_breaker=circuit_breaker_config,
+        source_config=request.source_config,
         telephony_configuration_id=telephony_configuration_id,
     )
 

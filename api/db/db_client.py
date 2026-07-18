@@ -1,4 +1,5 @@
 from api.db.agent_trigger_client import AgentTriggerClient
+from api.db.api_trigger_idempotency_client import ApiTriggerIdempotencyClient
 from api.db.api_key_client import APIKeyClient
 from api.db.campaign_client import CampaignClient
 from api.db.embed_token_client import EmbedTokenClient
@@ -35,6 +36,7 @@ class DBClient(
     APIKeyClient,
     EmbedTokenClient,
     AgentTriggerClient,
+    ApiTriggerIdempotencyClient,
     WebhookCredentialClient,
     ToolClient,
     KnowledgeBaseClient,
@@ -59,6 +61,7 @@ class DBClient(
     - APIKeyClient: handles API key operations
     - EmbedTokenClient: handles embed token and session operations
     - AgentTriggerClient: handles agent trigger operations for API-based call triggering
+    - ApiTriggerIdempotencyClient: handles idempotency keys for public agent triggers
     - WebhookCredentialClient: handles webhook credential operations
     - ToolClient: handles tool operations for reusable HTTP API tools
     - KnowledgeBaseClient: handles knowledge base document and vector search operations

@@ -1,0 +1,125 @@
+---
+title: "Twenty Workflow Setup"
+description: "Configure Twenty CRM workflows to trigger Samvaad outbound calls"
+---
+
+This guide configures Twenty's **Record trigger + HTTP Request action** to call Samvaad. No custom Twenty app code is required for phase 1.
+
+<Note>
+Use this path for one-off or per-record calls. For auto-calling many CRM phone numbers one by one, use [Queued Calling from Twenty](/integrations/twenty/queued-calling) so Samvaad campaigns own the queue, rate limits, retries, and progress.
+</Note>
+
+---
+
+## Step 1: Prepare Samvaad
+
+1. Open your voice agent in Samvaad and add an **API Trigger** node.
+2. **Publish** the agent so the trigger UUID is active.
+3. Copy the trigger UUID (e.g. `a1b2c3d4-e5f6-7890-abcd-ef1234567890`).
+4. Create an org [API key](/configurations/api-keys) and store it securely in Twenty (workflow secret or env var).
+
+---
+
+## Step 2: Create the Twenty workflow
+
+In Twenty, create a new workflow:
+
+| Setting | Recommended value |
+|---|---|
+| **Trigger** | Record — object: `person` (or your target object) |
+| **Trigger event** | `created` or `updated` (add filter conditions as needed) |
+| **Action** | HTTP Request |
+
+### Filter conditions (examples)
+
+Only call when a phone number exists and call has not been placed:
+
+- `phone` is not empty
+- Custom field `callStatus` equals `pending` (optional)
+
+Use Twenty workflow **Filter** or **Branch** steps before the HTTP action if your workspace supports them.
+
+---
+
+## Step 3: Configure the HTTP Request action
+
+| Field | Value |
+|---|---|
+| **Method** | `POST` |
+| **URL** | `https://{samvaad_host}/api/v1/public/agent/{trigger_uuid}` |
+| **Headers** | See below |
+| **Body** | JSON — see below |
+
+### Headers
+
+```json
+{
+  "Content-Type": "application/json",
+  "X-API-Key": "{{secrets.SAMVAAD_API_KEY}}",
+  "X-Idempotency-Key": "person:{{trigger.record.id}}:{{workflow.runId}}",
+  "X-Correlation-Id": "{{workflow.runId}}"
+}
+```
+
+Adjust header syntax to match your Twenty workflow variable syntax. Store `SAMVAAD_API_KEY` as a workspace secret.
+
+### Request body
+
+Map Twenty record fields into Samvaad `initial_context`:
+
+```json
+{
+  "phone_number": "{{trigger.record.phone}}",
+  "initial_context": {
+    "twenty_object": "person",
+    "twenty_record_id": "{{trigger.record.id}}",
+    "twenty_event_id": "{{workflow.runId}}",
+    "first_name": "{{trigger.record.firstName}}",
+    "last_name": "{{trigger.record.lastName}}",
+    "company_name": "{{trigger.record.company.name}}"
+  }
+}
+```
+
+<Warning>
+Validate phone number format before triggering. Samvaad returns `400` if the telephony provider rejects the number.
+</Warning>
+
+---
+
+## Step 4: Handle the response in Twenty
+
+Configure the HTTP action to treat these as success:
+
+- `200` with `"status": "initiated"` — new call placed
+- `200` with `"status": "duplicate"` — idempotent replay (safe to ignore)
+
+Store `workflow_run_id` from the response in a Twenty custom field if you want live status polling:
+
+```
+lastSamvaadRunId = response.body.workflow_run_id
+```
+
+---
+
+## Step 5: Version and test
+
+1. Save the workflow as **draft** and test against one record.
+2. Use Samvaad's test trigger endpoint (`POST /api/v1/public/agent/test/{uuid}`) while iterating on the agent draft.
+3. Activate the workflow version only after a successful end-to-end test.
+4. Keep the previous workflow version available for [rollback](/integrations/twenty/upgrade-playbook).
+
+---
+
+## Manual trigger (button / one-off)
+
+For operator-initiated calls, create a Twenty workflow with a **Manual trigger** instead of Record trigger. Use the same HTTP Request configuration and pass the selected record's phone number and ID in the body.
+
+---
+
+## Security checklist
+
+- Store Samvaad API keys in Twenty secrets — never in plain workflow JSON checked into git
+- Use a dedicated Samvaad API key per Twenty workspace
+- Restrict the Twenty workflow to roles that should initiate calls
+- Rotate API keys on a regular schedule

@@ -1,0 +1,206 @@
+---
+title: "Post-Call Sync to Twenty"
+description: "Write call outcomes back into Twenty CRM after calls complete — via the native Twenty CRM Sync node or webhooks"
+---
+
+After a call finishes, Samvaad updates Twenty over its public REST API — no changes to Twenty's source code are required. There are three ways to do this, in order of preference:
+
+- **Option A — Twenty CRM Sync node (recommended):** a native integration node that PATCHes the record and optionally creates a linked note. No middleware, handles auth and object/record resolution for you.
+- **Option B — Generic webhook node:** point a webhook at Twenty's REST API directly.
+- **Option C — Middleware adapter:** for complex transforms or multi-object updates.
+
+---
+
+## Option A: Twenty CRM Sync node (recommended)
+
+Add a **Twenty CRM Sync** node (`type: twenty`) to your agent. Like the QA and Tuner nodes, it is a standalone post-call node — it is **not** connected to other nodes in the conversation graph. After the call completes, Samvaad resolves the target record from the call context and writes the outcome back to Twenty.
+
+### 1. Store Twenty credentials in Samvaad
+
+1. Go to **Credentials** in Samvaad.
+2. Create an **API Key** credential (header `Authorization`, value `Bearer <token>`) or a **Bearer Token** credential with your Twenty API key.
+3. Copy the credential UUID.
+
+### 2. Configure the node
+
+| Setting | Value | Notes |
+|---|---|---|
+| **Enabled** | Yes | When off, the call is not written back |
+| **Twenty Base URL** | `https://crm.example.com` | Your Twenty instance root (no trailing `/rest`) |
+| **Twenty Credential** | credential UUID | API key / bearer credential created above |
+| **Object Collection** | `opportunities` | Leave blank to derive from `{{initial_context.twenty_object}}` |
+| **Record ID Path** | `initial_context.twenty_record_id` | Populated automatically by the [Twenty campaign source](/integrations/twenty/queued-calling) |
+| **Update Record** | Yes | PATCH the record with the field mapping |
+| **Field Mapping** | see below | Twenty field → template rendered against the call context |
+| **Create Note** | optional | Creates a Twenty note and links it to the record |
+
+The node derives the REST collection automatically (`opportunity` → `opportunities`, `person` → `people`, `company` → `companies`), so the same agent works for records of different types when **Object Collection** is left blank.
+
+### 3. Field mapping
+
+```json
+{
+  "stage": "{{gathered_context.opportunity_stage}}",
+  "lastCallDisposition": "{{outcome.disposition}}",
+  "lastCallRunId": "{{outcome.workflow_run_id}}",
+  "recordingUrl": "{{outcome.recording_url}}"
+}
+```
+
+Fields that render to an empty string are dropped, so partial outcomes never overwrite existing Twenty data with blanks.
+
+#### Field types (coercion)
+
+Twenty's REST API is type-strict — number, boolean, and JSON fields reject string values. Use **Field Types** to coerce rendered values to the right type:
+
+```json
+{
+  "amount": "number",
+  "probability": "integer",
+  "isQualified": "boolean",
+  "extraData": "json"
+}
+```
+
+Type rules:
+
+- A mapping whose value is a **single placeholder** (e.g. `"{{outcome.duration_seconds}}"`) keeps its native type automatically — an integer stays an integer without a hint.
+- Mixed templates (e.g. `"called at {{outcome.call_time}}"`) render to strings.
+- An explicit hint (`string` | `number` | `integer` | `boolean` | `json`) always wins and is applied after rendering.
+- If coercion fails (e.g. a non-numeric value hinted as `number`), Samvaad logs a warning and sends the raw value rather than dropping it.
+
+### 4. Optional note
+
+Enable **Create Note** to attach a call summary to the record:
+
+| Setting | Example |
+|---|---|
+| **Note Title Template** | `AI Call — {{outcome.disposition}}` |
+| **Note Body Template** | `Disposition: {{outcome.disposition}}\nRecording: {{outcome.recording_url}}` |
+| **Note Body Field** | `body` (Twenty's note body field name) |
+
+Samvaad creates the note via `POST /rest/notes` and links it to the record via `POST /rest/noteTargets`. Note creation is best-effort: a failed note does not fail the record update.
+
+### Outcome variables
+
+In addition to `initial_context`, `gathered_context`, `annotations`, and `cost_info`, the node exposes a stable `outcome` namespace:
+
+| Variable | Description |
+|---|---|
+| `{{outcome.disposition}}` | Final call disposition |
+| `{{outcome.duration_seconds}}` | Call duration |
+| `{{outcome.recording_url}}` | Public recording download URL |
+| `{{outcome.transcript_url}}` | Public transcript download URL |
+| `{{outcome.workflow_run_id}}` | Samvaad run ID (use for idempotency) |
+| `{{outcome.call_time}}` | Call start time (ISO 8601) |
+| `{{outcome.completed_at}}` | Write-back time (ISO 8601) |
+
+---
+
+## Option B: Direct Twenty API via webhook (simple setups)
+
+### 1. Create custom fields in Twenty
+
+On your target object (e.g. `person`), add fields such as:
+
+| Field | Type | Purpose |
+|---|---|---|
+| `callStatus` | Text | Final disposition (`completed`, `voicemail`, etc.) |
+| `lastCallRunId` | Text | Samvaad `workflow_run_id` for deduplication |
+| `recordingUrl` | URL | Link to call recording |
+| `transcriptUrl` | URL | Link to transcript |
+| `callSummary` | Text | QA or agent summary |
+
+Field API names are workspace-specific — note the exact names from Twenty's metadata API.
+
+### 2. Store Twenty credentials in Samvaad
+
+1. Go to **Credentials** in Samvaad.
+2. Create a **Bearer Token** credential with your Twenty API key.
+3. Copy the credential UUID for the webhook node.
+
+### 3. Add a webhook node to your agent
+
+In the Samvaad workflow editor, add a **Webhook** node with:
+
+| Setting | Value |
+|---|---|
+| **Enabled** | Yes |
+| **HTTP Method** | `PATCH` |
+| **Endpoint URL** | `https://{twenty_host}/rest/person/{{initial_context.twenty_record_id}}` |
+| **Authentication** | Twenty bearer credential |
+| **Retry on Failure** | Enabled |
+| **Max Retry Attempts** | `3` |
+| **Retry Backoff** | `2` seconds |
+
+Replace `person` with your object name and use Jinja placeholders in the URL if your Samvaad version supports templated URLs; otherwise use a fixed object type per agent.
+
+### 4. Payload template
+
+```json
+{
+  "callStatus": "{{gathered_context.call_disposition}}",
+  "lastCallRunId": "{{workflow_run_id}}",
+  "recordingUrl": "{{recording_url}}",
+  "transcriptUrl": "{{transcript_url}}",
+  "callSummary": "{{annotations.qa_webhook-1.summary}}"
+}
+```
+
+Adjust `annotations.qa_webhook-1` to match your QA node ID if you use QA analysis.
+
+---
+
+## Option C: Middleware adapter (recommended for complex mapping)
+
+When you need transformation, validation, or multi-object updates, deploy a small HTTP service between Samvaad and Twenty:
+
+```
+Samvaad webhook node → your-adapter.example.com/twenty/call-outcome → Twenty API
+```
+
+The adapter should:
+
+1. Validate the [contract payload](/integrations/twenty/contracts)
+2. Deduplicate by `workflow_run_id`
+3. Map fields to workspace-specific Twenty schema
+4. PATCH the correct record(s)
+5. Return `200` within 30 seconds
+
+This keeps Samvaad and Twenty fully decoupled — adapter changes when Twenty schema changes, not Samvaad core.
+
+---
+
+## Example workflow fragment
+
+See the full example in the repository:
+
+[`docs/integrations/twenty/example-workflow-webhook.json`](/integrations/twenty/example-workflow-webhook)
+
+Copy the `webhook` node into your agent definition and adjust URLs and field names.
+
+---
+
+## Available template variables
+
+See [Webhook Payloads](/developer/webhooks) for the full list. Most relevant for Twenty sync:
+
+| Variable | Description |
+|---|---|
+| `{{workflow_run_id}}` | Unique call run ID — use for idempotency |
+| `{{initial_context.twenty_record_id}}` | Record to update |
+| `{{gathered_context.*}}` | Data extracted during the call |
+| `{{recording_url}}` | Public recording download URL |
+| `{{transcript_url}}` | Public transcript download URL |
+| `{{annotations.*}}` | QA analysis output |
+| `{{cost_info.call_duration_seconds}}` | Call duration |
+
+---
+
+## Testing post-call sync
+
+1. Trigger a test call via the public agent API or Twenty workflow.
+2. Wait for the call to complete.
+3. Check Samvaad run logs for webhook execution status.
+4. Verify the Twenty record reflects updated fields.
+5. Re-run the webhook manually (or replay the payload) to confirm idempotent updates on the Twenty side.

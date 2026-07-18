@@ -1,0 +1,131 @@
+---
+title: "Reliability and Observability"
+description: "Idempotency, retries, correlation, and monitoring for the Twenty–Samvaad integration"
+---
+
+Production CRM + calling integrations fail in predictable ways: duplicate events, transient network errors, and schema drift. Use the patterns below to stay resilient.
+
+---
+
+## Idempotency (Twenty → Samvaad)
+
+### Problem
+
+Twenty workflows may retry HTTP actions on timeout or transient failure. Without deduplication, each retry places another outbound call.
+
+### Solution
+
+Send a stable idempotency key on every trigger request:
+
+```
+X-Idempotency-Key: person:{record_id}:{workflow_event_id}
+```
+
+Samvaad stores keys per organization. Repeated requests with the same key return:
+
+```json
+{
+  "status": "duplicate",
+  "workflow_run_id": 12345,
+  "idempotent_replay": true
+}
+```
+
+**Rules:**
+
+- Generate the key from immutable event identifiers (record ID + workflow run ID)
+- Do not reuse keys across different records or call intents
+- Treat `duplicate` as success in Twenty workflow branching
+
+---
+
+## Retries (Samvaad → Twenty)
+
+### Webhook node retries
+
+Enable on your Samvaad webhook node:
+
+| Setting | Recommended |
+|---|---|
+| Retry on Failure | `true` |
+| Max Retry Attempts | `3` |
+| Retry Backoff | `2` seconds (exponential: 2s, 4s, 8s) |
+
+Retries cover non-2xx HTTP responses and transport errors. They do not retry indefinitely — failed deliveries are logged in Samvaad worker logs.
+
+### Twenty-side idempotency
+
+Webhook retries may deliver the same payload twice. Twenty updates should:
+
+- Upsert by `workflow_run_id` or `lastCallRunId`
+- Skip if the stored run ID matches the incoming payload
+- Return `200` for duplicate deliveries
+
+---
+
+## Correlation IDs
+
+Pass `X-Correlation-Id` from Twenty (typically the workflow run ID). Samvaad stores it as `initial_context.external_correlation_id` and includes it in webhook payloads.
+
+Use correlation IDs to:
+
+- Join Twenty workflow logs with Samvaad run logs
+- Build support dashboards
+- Debug failed syncs without guessing which call maps to which CRM record
+
+---
+
+## Monitoring checklist
+
+### Trigger path (Twenty → Samvaad)
+
+| Signal | Where to check | Alert threshold |
+|---|---|---|
+| Trigger success rate | Twenty workflow run history | Below 95% over 1 hour |
+| `401` / `403` errors | Twenty HTTP action logs | Any occurrence |
+| `402` quota errors | Samvaad API logs | Any occurrence |
+| Duplicate replay rate | Samvaad API response `idempotent_replay: true` | Spike may indicate Twenty retry misconfiguration |
+| Call initiation failures | Samvaad logs (`Failed to initiate call`) | Above baseline |
+
+### Outcome sync path (Samvaad → Twenty)
+
+| Signal | Where to check | Alert threshold |
+|---|---|---|
+| Webhook delivery success | Samvaad worker logs (`Webhook '...' succeeded`) | Failures after max retries |
+| Twenty PATCH failures | Middleware logs or Twenty API logs | 4xx/5xx above baseline |
+| Stale records | Twenty report: `callStatus = pending` older than 1 hour | Any stuck records |
+
+### End-to-end health
+
+Run a synthetic test daily:
+
+1. Create or update a test person in Twenty
+2. Confirm Samvaad receives trigger and places call (or mock in staging)
+3. Confirm Twenty record updates after call completion
+
+---
+
+## Failure runbook (quick reference)
+
+| Symptom | Likely cause | Action |
+|---|---|---|
+| Duplicate calls to same lead | Missing or weak idempotency key | Add `X-Idempotency-Key` with record + event ID |
+| No call placed | Invalid API key or unpublished agent | Verify key, publish agent, check trigger UUID |
+| Call placed but CRM not updated | Webhook URL, auth, or field mapping | Check Samvaad webhook logs; validate Twenty field names |
+| `duplicate` on first request | Key reused across different intents | Use unique key per call intent |
+| Twenty upgrade broke sync | API or workflow variable change | Follow [upgrade playbook](/integrations/twenty/upgrade-playbook) |
+
+---
+
+## Log queries (Samvaad)
+
+Search Samvaad API and worker logs for:
+
+```
+Created workflow run * for API trigger
+Idempotent replay for trigger
+Webhook 'Notify Twenty' succeeded
+Webhook 'Notify Twenty' attempt
+```
+
+Include `workflow_run_id` and `external_correlation_id` in your log aggregation fields when available.

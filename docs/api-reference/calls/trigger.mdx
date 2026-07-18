@@ -12,6 +12,12 @@ Pass `initial_context` to inject runtime data as template variables into the age
 
 Pass `telephony_configuration_id` to route the call through a specific telephony configuration instead of your organization's default. The id is shown on each row in **Telephony configurations** (`https://app.dograh.com/telephony-configurations` for hosted or `http://localhost:3010/telephony-configurations` for local).
 
+## Idempotency
+
+For CRM integrations (e.g. [Twenty CRM](/integrations/twenty/overview)), send `X-Idempotency-Key` or `idempotency_key` in the body to prevent duplicate calls when the external system retries. Repeated requests return `status: duplicate` with the original `workflow_run_id`.
+
+Send `X-Correlation-Id` to store an external trace ID in `initial_context.external_correlation_id` for post-call webhook correlation.
+
 <Note>
 Your telephony provider must be configured before outbound calls will connect. See [Telephony](/integrations/telephony/overview) for setup instructions.
 </Note>

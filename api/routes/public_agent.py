@@ -9,7 +9,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Header, HTTPException
 from loguru import logger
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from api.db import db_client
 from api.enums import TriggerState
@@ -22,6 +22,10 @@ from api.utils.common import get_backend_endpoints
 
 router = APIRouter(prefix="/public/agent")
 
+# Stable contract version for external CRM integrations (e.g. Twenty).
+INTEGRATION_CONTRACT_VERSION = "1.0"
+MAX_IDEMPOTENCY_KEY_LENGTH = 255
+
 
 class TriggerCallRequest(BaseModel):
     """Request model for triggering a call via API"""
@@ -29,6 +33,15 @@ class TriggerCallRequest(BaseModel):
     phone_number: str
     initial_context: Optional[dict] = None
     telephony_configuration_id: int | None = None
+    idempotency_key: Optional[str] = Field(
+        default=None,
+        max_length=MAX_IDEMPOTENCY_KEY_LENGTH,
+        description=(
+            "Optional deduplication key. When provided, repeated requests with "
+            "the same key return the original workflow run instead of placing "
+            "another call."
+        ),
+    )
 
 
 class TriggerCallResponse(BaseModel):
@@ -37,6 +50,8 @@ class TriggerCallResponse(BaseModel):
     status: str
     workflow_run_id: int
     workflow_run_name: str
+    idempotent_replay: bool = False
+    integration_contract_version: str = INTEGRATION_CONTRACT_VERSION
 
 
 def trigger_exists_in_workflow(workflow_definition: dict, trigger_path: str) -> bool:
@@ -57,12 +72,45 @@ def trigger_exists_in_workflow(workflow_definition: dict, trigger_path: str) -> 
     return False
 
 
+def _resolve_idempotency_key(
+    request: TriggerCallRequest,
+    x_idempotency_key: Optional[str],
+) -> Optional[str]:
+    """Prefer the header, then fall back to the request body."""
+    key = (x_idempotency_key or request.idempotency_key or "").strip()
+    if not key:
+        return None
+    if len(key) > MAX_IDEMPOTENCY_KEY_LENGTH:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"idempotency_key must be at most {MAX_IDEMPOTENCY_KEY_LENGTH} characters"
+            ),
+        )
+    return key
+
+
+async def _build_duplicate_response(
+    workflow_run_id: int,
+) -> TriggerCallResponse:
+    workflow_run = await db_client.get_workflow_run_by_id(workflow_run_id)
+    workflow_run_name = workflow_run.name if workflow_run else f"WR-API-{workflow_run_id}"
+    return TriggerCallResponse(
+        status="duplicate",
+        workflow_run_id=workflow_run_id,
+        workflow_run_name=workflow_run_name,
+        idempotent_replay=True,
+    )
+
+
 async def _initiate_call(
     uuid: str,
     request: TriggerCallRequest,
     x_api_key: str,
     *,
     use_draft: bool,
+    idempotency_key: Optional[str] = None,
+    external_correlation_id: Optional[str] = None,
 ) -> TriggerCallResponse:
     """Shared core for production and test trigger endpoints.
 
@@ -82,6 +130,20 @@ async def _initiate_call(
     # 3. Validate organization match (API key org must match trigger org)
     if api_key.organization_id != trigger.organization_id:
         raise HTTPException(status_code=403, detail="Access denied")
+
+    # 3.5 Idempotency check before side effects
+    if idempotency_key:
+        existing_run_id = await db_client.get_idempotent_workflow_run_id(
+            trigger.organization_id,
+            idempotency_key,
+        )
+        if existing_run_id:
+            logger.info(
+                "Returning idempotent replay for trigger {} key {}",
+                uuid,
+                idempotency_key,
+            )
+            return await _build_duplicate_response(existing_run_id)
 
     # 4. Validate trigger is active
     if trigger.state != TriggerState.ACTIVE.value:
@@ -164,21 +226,42 @@ async def _initiate_call(
     # 8. Create workflow run
     mode_label = "TEST" if use_draft else "API"
     workflow_run_name = f"WR-{mode_label}-{random.randint(1000, 9999)}"
+    initial_context = {
+        "provider": provider.PROVIDER_NAME,
+        "phone_number": request.phone_number,
+        "agent_uuid": uuid,
+        "trigger_mode": "test" if use_draft else "production",
+        "telephony_configuration_id": resolved_cfg_id,
+        **(request.initial_context or {}),
+    }
+    if idempotency_key:
+        initial_context["idempotency_key"] = idempotency_key
+    if external_correlation_id:
+        initial_context["external_correlation_id"] = external_correlation_id
+
     workflow_run = await db_client.create_workflow_run(
         name=workflow_run_name,
         workflow_id=trigger.workflow_id,
         mode=workflow_run_mode,
-        initial_context={
-            "provider": provider.PROVIDER_NAME,
-            "phone_number": request.phone_number,
-            "agent_uuid": uuid,
-            "trigger_mode": "test" if use_draft else "production",
-            "telephony_configuration_id": resolved_cfg_id,
-            **(request.initial_context or {}),
-        },
+        initial_context=initial_context,
         user_id=api_key.created_by,
         use_draft=use_draft,
     )
+
+    if idempotency_key:
+        stored = await db_client.store_idempotency_key(
+            organization_id=trigger.organization_id,
+            idempotency_key=idempotency_key,
+            trigger_path=uuid,
+            workflow_run_id=workflow_run.id,
+        )
+        if not stored:
+            existing_run_id = await db_client.get_idempotent_workflow_run_id(
+                trigger.organization_id,
+                idempotency_key,
+            )
+            if existing_run_id:
+                return await _build_duplicate_response(existing_run_id)
 
     logger.info(
         f"Created workflow run {workflow_run.id} for API trigger {uuid} "
@@ -236,12 +319,22 @@ async def initiate_call(
     uuid: str,
     request: TriggerCallRequest,
     x_api_key: str = Header(..., alias="X-API-Key"),
+    x_idempotency_key: Optional[str] = Header(None, alias="X-Idempotency-Key"),
+    x_correlation_id: Optional[str] = Header(None, alias="X-Correlation-Id"),
 ):
     """Initiate a phone call against the published agent.
 
     Executes the workflow's currently released definition.
     """
-    return await _initiate_call(uuid, request, x_api_key, use_draft=False)
+    idempotency_key = _resolve_idempotency_key(request, x_idempotency_key)
+    return await _initiate_call(
+        uuid,
+        request,
+        x_api_key,
+        use_draft=False,
+        idempotency_key=idempotency_key,
+        external_correlation_id=(x_correlation_id or "").strip() or None,
+    )
 
 
 @router.post("/test/{uuid}", response_model=TriggerCallResponse)
@@ -249,10 +342,20 @@ async def initiate_call_test(
     uuid: str,
     request: TriggerCallRequest,
     x_api_key: str = Header(..., alias="X-API-Key"),
+    x_idempotency_key: Optional[str] = Header(None, alias="X-Idempotency-Key"),
+    x_correlation_id: Optional[str] = Header(None, alias="X-Correlation-Id"),
 ):
     """Initiate a phone call against the latest draft of the agent.
 
     Useful for verifying changes before publishing. Falls back to the
     published definition when no draft exists.
     """
-    return await _initiate_call(uuid, request, x_api_key, use_draft=True)
+    idempotency_key = _resolve_idempotency_key(request, x_idempotency_key)
+    return await _initiate_call(
+        uuid,
+        request,
+        x_api_key,
+        use_draft=True,
+        idempotency_key=idempotency_key,
+        external_correlation_id=(x_correlation_id or "").strip() or None,
+    )

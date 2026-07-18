@@ -166,7 +166,10 @@ class CampaignSourceSyncService(ABC):
 
     @abstractmethod
     async def validate_source(
-        self, source_id: str, organization_id: Optional[int] = None
+        self,
+        source_id: str,
+        organization_id: Optional[int] = None,
+        source_config: Optional[Dict[str, Any]] = None,
     ) -> ValidationResult:
         """Validate source data before campaign creation."""
         pass

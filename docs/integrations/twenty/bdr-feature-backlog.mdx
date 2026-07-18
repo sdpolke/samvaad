@@ -1,0 +1,128 @@
+---
+title: "BDR Calling Feature Backlog"
+description: "Features from the bdr-calling reference implementation to migrate into Samvaad over time"
+---
+
+The `bdr-calling` reference implementation is useful for outbound sales-agent behavior, but it does **not** contain a full queue worker. Calls are mostly initiated immediately through REST. Samvaad's campaign system is stronger for queued calling, while `bdr-calling` has several voice-agent features worth migrating later.
+
+---
+
+## What Samvaad already covers
+
+| Capability | Samvaad status | Notes |
+|---|---|---|
+| Queued outbound calls | Supported | Campaigns use `queued_runs`, dispatcher, ARQ tasks, and Redis events |
+| Sequential dialing | Supported | Set `max_concurrency=1` and `rate_limit_per_second=1` |
+| Retry on busy/no-answer | Supported | Campaign retry config and telephony status events |
+| Campaign pause/resume | Supported | Campaign runner and orchestrator |
+| CRM context variables | Supported | Store Twenty IDs and fields in queued run context / `initial_context` |
+| Post-call CRM sync | Supported | Webhook nodes run after call completion |
+| Per-workflow prompts | Supported | Workflow graph and template variables |
+| Telephony abstraction | Supported | Provider registry and per-provider routes |
+
+---
+
+## What bdr-calling adds
+
+| Feature | bdr-calling reference | Samvaad priority |
+|---|---|---|
+| IVR / call-state detection | `app/core/call_state.py` | High |
+| DTMF navigation | call-state handling | High |
+| Deferred greeting until human detected | `run_pipeline` logic | High |
+| Goodbye phrase detection | `app/core/idle_monitor.py` | Medium |
+| In-call callback scheduling tool | `app/scheduler/callback_tool.py` | Medium |
+| Callback follow-up store | `app/scheduler/callback_db.py` | Medium |
+| Callback executor | Not implemented in bdr-calling | Medium |
+| Fixed outbound greeting with placeholders | customer config + pipeline greeting | Medium |
+| Per-customer JSON config | `app/customers/loader.py` | Low |
+| Call log upsert and dashboard APIs | `app/integrations/call_log_db.py`, `app/api/call_logs.py` | Low |
+| Post-call heuristic extraction | `app/integrations/call_store.py` | Low |
+| Timezone utilities for scheduled callbacks | `app/scheduler/timezone_utils.py` | Low |
+
+---
+
+## Recommended migration phases
+
+### Phase 1: CRM queue integration
+
+Use Samvaad campaigns as the queue owner.
+
+- Use `TwentySyncService` as the native campaign source for people and opportunities.
+- Keep CSV import available as a fallback path.
+- Keep all call rate limits, retries, and progress in Samvaad.
+
+### Phase 2: Outbound call intelligence
+
+Port the call-state behavior that matters for BDR campaigns:
+
+- Detect IVR, voicemail, and human pickup.
+- Defer the agent greeting until human pickup.
+- Support DTMF navigation for common IVR menus.
+- Add structured call tags for `human`, `voicemail`, `ivr`, `busy`, and `no_answer`.
+
+### Phase 3: Callback scheduling loop
+
+Samvaad already has callback-related infrastructure in its current codebase, but the BDR pattern clarifies the sales use case:
+
+1. Agent detects or confirms callback intent.
+2. Tool writes a structured callback request.
+3. Background worker finds due callbacks.
+4. Worker enqueues a new Samvaad campaign queued run or starts a controlled retry.
+5. Post-call webhook updates Twenty.
+
+### Phase 4: CRM outcome intelligence
+
+Add structured outcome extraction for sales operations:
+
+- Interest level
+- Follow-up requested
+- Objections
+- Budget/timeline/authority fields
+- Email captured verbally
+- Call summary
+- Recommended next step
+
+These should become `gathered_context` or QA annotations so webhook nodes can sync them to Twenty fields.
+
+---
+
+## Implementation notes
+
+### Queueing
+
+Do not port bdr-calling's immediate `/call` behavior as the queue. Samvaad campaigns already provide a better queue model:
+
+```mermaid
+flowchart LR
+  source[TwentyOrCSVSource] --> queuedRuns[QueuedRuns]
+  queuedRuns --> dispatcher[CampaignDispatcher]
+  dispatcher --> workflowRun[WorkflowRun]
+  workflowRun --> postCall[PostCallIntegrations]
+```
+
+### Callback scheduling
+
+The BDR callback table is useful as a product reference, but Samvaad should express due callbacks as campaign queued runs where possible. That keeps rate limits, retry policy, and observability in one system.
+
+### CRM entities
+
+Do not add Twenty-specific entities to Samvaad core. Store CRM IDs in context:
+
+- `twenty_person_id`
+- `twenty_company_id`
+- `twenty_opportunity_id`
+- `twenty_record_id`
+- `twenty_object`
+
+If richer mapping is needed, implement it in a dedicated Twenty integration package or campaign source.
+
+---
+
+## Later-stage Samvaad tasks
+
+1. Add first-class UI support for selecting a CRM source and mapping fields.
+2. Add human/voicemail/IVR call-state detection to outbound workflows.
+3. Add callback scheduling as a tool plus due-callback worker.
+4. Add post-call outcome schema for BDR calls.
+5. Add redial policy for voicemail if campaign config enables it.
+6. Add operational reports grouped by company, opportunity, and campaign.

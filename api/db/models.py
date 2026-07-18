@@ -857,6 +857,42 @@ class AgentTriggerModel(Base):
     )
 
 
+class ApiTriggerIdempotencyModel(Base):
+    """Stores idempotency keys for public agent trigger requests.
+
+    Prevents duplicate outbound calls when external systems (e.g. Twenty CRM
+    workflows) retry the same trigger event.
+    """
+
+    __tablename__ = "api_trigger_idempotency_keys"
+
+    id = Column(Integer, primary_key=True, index=True)
+    organization_id = Column(
+        Integer, ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False
+    )
+    idempotency_key = Column(String(255), nullable=False)
+    trigger_path = Column(String(36), nullable=False)
+    workflow_run_id = Column(
+        Integer, ForeignKey("workflow_runs.id", ondelete="CASCADE"), nullable=False
+    )
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
+
+    organization = relationship("OrganizationModel")
+    workflow_run = relationship("WorkflowRunModel")
+
+    __table_args__ = (
+        UniqueConstraint(
+            "organization_id",
+            "idempotency_key",
+            name="uq_api_trigger_idempotency_org_key",
+        ),
+        Index(
+            "ix_api_trigger_idempotency_workflow_run_id",
+            "workflow_run_id",
+        ),
+    )
+
+
 class ExternalCredentialModel(Base):
     """Model for storing external authentication credentials.
 

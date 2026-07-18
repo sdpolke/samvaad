@@ -1,0 +1,14 @@
+flowchart TD
+    A[Inbound call] --> B[Greeting: silent caller-ID lookup and welcome]
+    B --> C{Business hours?}
+    C -->|Open| D[Business Hours: understand request and collect details]
+    C -->|Closed| E[After Hours: limited services and urgent handling]
+    D --> F{Authentication required?}
+    E --> F
+    F -->|Yes| G[Authenticate patient]
+    F -->|No - Records or new patient| H[Routing: silent destination resolution]
+    G --> H
+    H --> I{Scheduling?}
+    I -->|Yes| J[Scheduling Init then Scheduling Engine: availability and booking]
+    I -->|No| K[Transfer or Hangup: approved line only]
+    J --> K

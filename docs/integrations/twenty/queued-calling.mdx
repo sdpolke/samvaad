@@ -1,0 +1,235 @@
+---
+title: "Queued Calling from Twenty"
+description: "Queue Twenty CRM records in Samvaad campaigns and call them one by one"
+---
+
+Use **Samvaad campaigns** when you want to auto-call phone numbers captured in Twenty CRM. Twenty workflows are useful for single-record triggers, but the campaign queue is the right Samvaad primitive for bulk or sequential calling.
+
+---
+
+## Recommendation
+
+Do **not** override Twenty's phone-number click in phase 1. Twenty opens `tel:` links, which means macOS opens FaceTime. Replacing that click requires customizing Twenty UI and increases coupling to Twenty releases.
+
+Instead, use this model:
+
+```mermaid
+flowchart LR
+  twentyView[TwentyPeopleOrOpportunitiesView] --> exportOrSync[ExportOrTwentySync]
+  exportOrSync --> campaign[SamvaadCampaign]
+  campaign --> queue[QueuedRuns]
+  queue --> dispatcher[CampaignDispatcher]
+  dispatcher --> call[SamvaadWorkflowRun]
+  call --> webhook[PostCallWebhook]
+  webhook --> twentyUpdate[TwentyRecordUpdate]
+```
+
+Samvaad already has the queue, rate limiting, concurrency control, retries, pause/resume, and campaign progress tracking. Twenty should provide the CRM records and receive outcomes.
+
+---
+
+## When to use each path
+
+| Use case | Recommended path |
+|---|---|
+| Click one record and call immediately | Twenty workflow/manual action → Samvaad public trigger |
+| Auto-call a list one by one | Twenty records → Samvaad campaign queue |
+| Call all people in a saved Twenty view | Export/sync view → Samvaad campaign |
+| Call opportunities by stage/company | Twenty opportunity/company mapping → Samvaad campaign |
+| Replace phone-number click behavior | Later-stage Twenty UI/app customization |
+
+---
+
+## Phase 1: native Twenty campaign source
+
+Samvaad includes a `TwentySyncService` campaign source. It fetches Twenty REST records, converts them to `queued_runs`, and then the existing Samvaad campaign dispatcher calls them one by one.
+
+Create a campaign with `source_type: "twenty"` and a `source_config` object.
+
+### People example
+
+```json
+{
+  "name": "Twenty people campaign",
+  "workflow_id": 123,
+  "source_type": "twenty",
+  "source_id": "people",
+  "source_config": {
+    "base_url": "http://localhost:3000",
+    "credential_uuid": "TWENTY_BEARER_CREDENTIAL_UUID",
+    "object": "people",
+    "depth": 1,
+    "page_limit": 100,
+    "phone_path": "phones"
+  },
+  "max_concurrency": 1
+}
+```
+
+### Opportunities example
+
+Use opportunities when the sales motion is deal-led. The service treats the opportunity as the queue item and the opportunity's point of contact as the dial target.
+
+```json
+{
+  "name": "Qualified opportunities campaign",
+  "workflow_id": 123,
+  "source_type": "twenty",
+  "source_id": "opportunities",
+  "source_config": {
+    "base_url": "http://localhost:3000",
+    "credential_uuid": "TWENTY_BEARER_CREDENTIAL_UUID",
+    "object": "opportunities",
+    "depth": 1,
+    "filter": "stage[eq]:NEW",
+    "phone_path": "pointOfContact.phones",
+    "context_mapping": {
+      "opportunity_stage": "stage",
+      "opportunity_amount": "amount.amountMicros"
+    }
+  },
+  "max_concurrency": 1
+}
+```
+
+### Source config reference
+
+| Field | Required | Description |
+|---|---|---|
+| `base_url` | Yes | Twenty app URL, e.g. `http://localhost:3000` |
+| `credential_uuid` | Recommended | Samvaad bearer/API-key credential used for Twenty REST auth |
+| `object` | Yes | Twenty REST object collection, usually `people` or `opportunities` |
+| `filter` | No | Twenty REST filter string, e.g. `stage[eq]:NEW` |
+| `order_by` | No | Twenty REST order string |
+| `depth` | No | `0` or `1`; use `1` to include relations like company/point of contact |
+| `page_limit` | No | Records per Twenty API page; defaults to `100` |
+| `max_records` | No | Optional hard cap for one sync |
+| `phone_path` | No | Dot path to the phone field; defaults cover `people` and opportunity point-of-contact phones |
+| `record_id_path` | No | Dot path for the Twenty record ID; defaults to `id` |
+| `context_mapping` | No | Additional queued-run context fields mapped from Twenty record paths |
+
+The sync service creates queued-run context with:
+
+- `phone_number`
+- `twenty_object`
+- `twenty_record_id`
+- `twenty_person_id` when available
+- `twenty_company_id` when available
+- `twenty_opportunity_id` when available
+- `company_name`, `opportunity_name`, `first_name`, `last_name` when available
+
+---
+
+## Alternative: CSV campaign
+
+Use CSV when you do not want Samvaad to connect to the Twenty API directly.
+
+1. In Twenty, create a view of people or opportunities to call.
+2. Export the records to CSV.
+3. Include a `phone_number` column and CRM context columns.
+4. Upload the CSV to Samvaad as a campaign source.
+5. Set campaign concurrency to `1`.
+6. Start the campaign.
+
+Each CSV row becomes one queued call in Samvaad.
+
+### Recommended CSV columns
+
+| Column | Required | Purpose |
+|---|---|---|
+| `phone_number` | Yes | Number to dial |
+| `twenty_object` | Yes | `person`, `opportunity`, or another Twenty object |
+| `twenty_record_id` | Yes | Record to update after the call |
+| `twenty_person_id` | Recommended | Person contacted |
+| `twenty_company_id` | Recommended | Company/account context |
+| `twenty_opportunity_id` | Recommended | Opportunity context |
+| `company_name` | Recommended | Prompt personalization |
+| `opportunity_name` | Recommended | Prompt personalization |
+| `first_name` | Recommended | Greeting personalization |
+| `samvaad_trigger_uuid` | Optional | Future per-record workflow mapping |
+
+### One-by-one settings
+
+Use these campaign settings for strict sequential dialing:
+
+| Setting | Value |
+|---|---|
+| `max_concurrency` | `1` |
+| `rate_limit_per_second` | `1` |
+| Retry on busy/no-answer | Enabled if you want automatic redial |
+| Schedule window | Set business-hour limits if needed |
+
+Samvaad may claim rows in batches internally, but these limits ensure calls are dispatched one at a time.
+
+---
+
+## Opportunity and company mapping
+
+For opportunity-led calling, treat the **opportunity** as the queue item and the **person phone number** as the dial target.
+
+Recommended queued run context:
+
+```json
+{
+  "phone_number": "+14155550100",
+  "twenty_object": "opportunity",
+  "twenty_opportunity_id": "opportunity-id",
+  "twenty_company_id": "company-id",
+  "twenty_person_id": "person-id",
+  "twenty_record_id": "opportunity-id",
+  "company_name": "Acme Corp",
+  "opportunity_name": "Enterprise renewal",
+  "first_name": "Jane"
+}
+```
+
+Use `twenty_record_id` as the record Samvaad updates after the call. If the call result should update both the opportunity and person, use a middleware adapter or a future dedicated Twenty integration package.
+
+---
+
+## Per-record workflow mapping
+
+There are three practical mapping levels:
+
+| Mapping level | Where to store it | Best for |
+|---|---|---|
+| One Samvaad workflow per campaign | Campaign config | Simple outbound campaigns |
+| One Samvaad workflow per company | Twenty Company custom field | Company-specific scripts or accounts |
+| One Samvaad workflow per opportunity | Twenty Opportunity custom field | Deal-stage-specific calling |
+
+For phase 1, prefer **one Samvaad workflow per campaign**. Per-company or per-opportunity workflow mapping should be added when the `twenty` campaign source exists, because the sync service can resolve the right Samvaad trigger UUID while creating queued runs.
+
+---
+
+## Post-call update
+
+Add a Samvaad webhook node to update Twenty after each call. Use the CRM IDs stored in `initial_context`.
+
+Example payload:
+
+```json
+{
+  "contract_version": "1.0",
+  "workflow_run_id": "{{workflow_run_id}}",
+  "twenty_object": "{{initial_context.twenty_object}}",
+  "twenty_record_id": "{{initial_context.twenty_record_id}}",
+  "twenty_opportunity_id": "{{initial_context.twenty_opportunity_id}}",
+  "twenty_company_id": "{{initial_context.twenty_company_id}}",
+  "twenty_person_id": "{{initial_context.twenty_person_id}}",
+  "call_disposition": "{{gathered_context.call_disposition}}",
+  "recording_url": "{{recording_url}}",
+  "transcript_url": "{{transcript_url}}"
+}
+```
+
+---
+
+## Why not Twenty workflows for bulk calling?
+
+Twenty workflows are still useful, but they are not the best queue owner.
+
+- Twenty workflows can trigger HTTP calls, but Samvaad campaigns already own call concurrency, retry, schedule windows, pause/resume, and progress.
+- Per-record Twenty workflow calls create immediate calls unless you build queueing in the middle.
+- Samvaad campaign runs give you a single operational view of the calling batch.
+
+Use Twenty workflows for **single-call actions** and Samvaad campaigns for **queued calling**.

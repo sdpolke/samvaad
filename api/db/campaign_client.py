@@ -24,6 +24,7 @@ class CampaignClient(BaseDBClient):
         max_concurrency: Optional[int] = None,
         schedule_config: Optional[dict] = None,
         circuit_breaker: Optional[dict] = None,
+        source_config: Optional[dict] = None,
         telephony_configuration_id: Optional[int] = None,
     ) -> CampaignModel:
         """Create a new campaign"""
@@ -36,6 +37,8 @@ class CampaignClient(BaseDBClient):
                 orchestrator_metadata["schedule_config"] = schedule_config
             if circuit_breaker is not None:
                 orchestrator_metadata["circuit_breaker"] = circuit_breaker
+            if source_config is not None:
+                orchestrator_metadata["source_config"] = source_config
 
             campaign = CampaignModel(
                 name=name,

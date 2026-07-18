@@ -12,7 +12,7 @@ Dograh executes **webhook nodes** asynchronously after a workflow run completes.
 1. A call completes (or a run finishes)
 2. Dograh executes any `webhook` nodes in the workflow asynchronously
 3. The payload template is rendered with the run's context and sent as a JSON `POST` (or your configured method) to your endpoint
-4. Non-200 responses are logged but do not block or retry by default (configure `retry_config` to change this)
+4. Non-200 responses are logged. Enable **Retry on Failure** on the webhook node to retry with exponential backoff (see [Webhook node](/voice-agent/webhook)).
 
 ---
 

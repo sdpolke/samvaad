@@ -1,0 +1,163 @@
+---
+title: "Twenty ↔ Samvaad Contracts"
+description: "Versioned HTTP contracts for triggering calls and syncing outcomes between Twenty CRM and Samvaad"
+---
+
+Integration contract version: **`1.0`**
+
+Both systems should treat these schemas as the stable boundary. Internal implementation details may change without breaking the contract.
+
+---
+
+## Twenty → Samvaad: Trigger outbound call
+
+### Endpoint
+
+```
+POST /api/v1/public/agent/{trigger_uuid}
+```
+
+Replace `{trigger_uuid}` with the UUID from your Samvaad agent's [API Trigger node](/voice-agent/api-trigger).
+
+### Headers
+
+| Header | Required | Description |
+|---|---|---|
+| `X-API-Key` | Yes | Samvaad organization API key |
+| `X-Idempotency-Key` | Recommended | Deduplication key (max 255 chars). Prefer `{twenty_object_name}:{record_id}:{workflow_event_id}` |
+| `X-Correlation-Id` | Recommended | End-to-end trace ID echoed in `initial_context.external_correlation_id` |
+| `Content-Type` | Yes | `application/json` |
+
+### Request body
+
+```json
+{
+  "phone_number": "+14155550100",
+  "idempotency_key": "person:abc123:workflow-run-789",
+  "initial_context": {
+    "twenty_object": "person",
+    "twenty_record_id": "abc123-def456-...",
+    "twenty_workspace_id": "workspace-uuid",
+    "twenty_event_id": "workflow-run-789",
+    "first_name": "Jane",
+    "company_name": "Acme Corp"
+  }
+}
+```
+
+| Field | Required | Description |
+|---|---|---|
+| `phone_number` | Yes | E.164 or provider-supported format |
+| `initial_context` | No | Arbitrary key/value pairs available as template variables and in post-call webhooks |
+| `telephony_configuration_id` | No | Override org default telephony config |
+| `idempotency_key` | No | Body fallback when `X-Idempotency-Key` header is not set |
+
+### Success response (`200`)
+
+**New call initiated:**
+
+```json
+{
+  "status": "initiated",
+  "workflow_run_id": 12345,
+  "workflow_run_name": "WR-API-4821",
+  "idempotent_replay": false,
+  "integration_contract_version": "1.0"
+}
+```
+
+**Duplicate request (idempotency replay):**
+
+```json
+{
+  "status": "duplicate",
+  "workflow_run_id": 12345,
+  "workflow_run_name": "WR-API-4821",
+  "idempotent_replay": true,
+  "integration_contract_version": "1.0"
+}
+```
+
+Treat `duplicate` as success — the original call was already created.
+
+### Error responses
+
+| Status | Meaning | Twenty workflow action |
+|---|---|---|
+| `401` | Invalid API key | Fix credentials; do not retry blindly |
+| `403` | API key org mismatch | Fix configuration |
+| `404` | Trigger not found or inactive | Verify trigger UUID and agent publish state |
+| `402` | Quota exceeded | Pause workflow or upgrade quota |
+| `400` | Invalid phone or telephony failure | Log and alert; optionally retry with backoff |
+| `500` | Server error | Retry with exponential backoff |
+
+---
+
+## Samvaad → Twenty: Post-call outcome sync
+
+Samvaad delivers outcomes via a **webhook node** configured on your agent. The webhook POSTs (or PATCHes via a middleware) to Twenty's REST API after the call completes.
+
+### Recommended payload (Samvaad webhook template)
+
+```json
+{
+  "contract_version": "1.0",
+  "workflow_run_id": "{{workflow_run_id}}",
+  "correlation_id": "{{initial_context.external_correlation_id}}",
+  "twenty_object": "{{initial_context.twenty_object}}",
+  "twenty_record_id": "{{initial_context.twenty_record_id}}",
+  "twenty_event_id": "{{initial_context.twenty_event_id}}",
+  "call_disposition": "{{gathered_context.call_disposition}}",
+  "call_duration_seconds": "{{cost_info.call_duration_seconds}}",
+  "recording_url": "{{recording_url}}",
+  "transcript_url": "{{transcript_url}}",
+  "summary": "{{annotations.qa_webhook-1.summary}}",
+  "phone_number": "{{initial_context.phone_number}}"
+}
+```
+
+### Twenty API update (direct PATCH)
+
+Point the webhook node at Twenty's Core API:
+
+```
+PATCH https://{twenty_host}/rest/{objectName}/{recordId}
+Authorization: Bearer {twenty_api_key}
+Content-Type: application/json
+```
+
+Example body mapping custom fields:
+
+```json
+{
+  "callStatus": "{{gathered_context.call_disposition}}",
+  "lastCallRunId": "{{workflow_run_id}}",
+  "recordingUrl": "{{recording_url}}",
+  "transcriptUrl": "{{transcript_url}}"
+}
+```
+
+<Note>
+Twenty object and field names are workspace-specific. Create custom fields in Twenty before mapping webhook payloads.
+</Note>
+
+### Idempotency on the Twenty side
+
+Webhook delivery may retry. Your Twenty update handler (or middleware) should:
+
+1. Key updates by `workflow_run_id` or `correlation_id`
+2. Ignore duplicate deliveries with the same run ID
+3. Return `2xx` promptly
+
+---
+
+## Correlation field reference
+
+| Field | Set by | Used for |
+|---|---|---|
+| `initial_context.twenty_record_id` | Twenty workflow | PATCH target record |
+| `initial_context.twenty_object` | Twenty workflow | Object type (`person`, `company`, custom) |
+| `initial_context.twenty_event_id` | Twenty workflow | Idempotency key component |
+| `initial_context.external_correlation_id` | Samvaad (from `X-Correlation-Id`) | Cross-system tracing |
+| `initial_context.idempotency_key` | Samvaad (from idempotency header/body) | Stored on workflow run |
+| `workflow_run_id` | Samvaad | Primary call identifier |

@@ -664,6 +664,9 @@ class TriggerNodeData(BaseNodeData):
         "credential_uuid",
         "custom_headers",
         "payload_template",
+        "retry_enabled",
+        "retry_max_attempts",
+        "retry_backoff_seconds",
     ),
     field_overrides={
         "name": {
@@ -719,6 +722,23 @@ class TriggerNodeData(BaseNodeData):
                 "transcript_url": "{{transcript_url}}",
             },
         },
+        "retry_enabled": {
+            "display_name": "Retry on Failure",
+            "description": (
+                "When enabled, retries non-2xx responses and transport errors "
+                "with exponential backoff."
+            ),
+        },
+        "retry_max_attempts": {
+            "display_name": "Max Retry Attempts",
+            "description": "Total delivery attempts including the first request.",
+            "spec_default": 3,
+        },
+        "retry_backoff_seconds": {
+            "display_name": "Retry Backoff (seconds)",
+            "description": "Base delay between attempts. Each retry doubles the wait.",
+            "spec_default": 2.0,
+        },
     },
 )
 class WebhookNodeData(BaseNodeData):
@@ -732,6 +752,9 @@ class WebhookNodeData(BaseNodeData):
     payload_template: Optional[dict] = spec_field(
         default=None, ui_type=PropertyType.json
     )
+    retry_enabled: bool = spec_field(default=False, ui_type=PropertyType.boolean)
+    retry_max_attempts: int = spec_field(default=3, ge=1, le=10)
+    retry_backoff_seconds: float = spec_field(default=2.0, gt=0)
 
 
 @node_spec(

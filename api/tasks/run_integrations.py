@@ -1,5 +1,6 @@
 """Execute integrations (QA analysis, webhooks) after workflow run completion."""
 
+import asyncio
 import random
 from typing import Any, Dict, Optional
 
@@ -423,39 +424,70 @@ async def _execute_webhook_node(
     payload = render_template(webhook_data.payload_template or {}, render_context)
 
     method = (webhook_data.http_method or "POST").upper()
+    max_attempts = (
+        webhook_data.retry_max_attempts if webhook_data.retry_enabled else 1
+    )
+    backoff_seconds = webhook_data.retry_backoff_seconds
 
-    logger.info(f"Executing webhook '{webhook_name}': {method}")
+    logger.info(
+        f"Executing webhook '{webhook_name}': {method} "
+        f"(attempts={max_attempts}, retry={webhook_data.retry_enabled})"
+    )
 
-    try:
-        async with httpx.AsyncClient() as client:
-            if method in ("POST", "PUT", "PATCH"):
-                response = await client.request(
-                    method=method,
-                    url=url,
-                    json=payload,
-                    headers=headers,
-                    timeout=30.0,
+    for attempt in range(1, max_attempts + 1):
+        try:
+            async with httpx.AsyncClient() as client:
+                if method in ("POST", "PUT", "PATCH"):
+                    response = await client.request(
+                        method=method,
+                        url=url,
+                        json=payload,
+                        headers=headers,
+                        timeout=30.0,
+                    )
+                else:  # GET, DELETE
+                    response = await client.request(
+                        method=method,
+                        url=url,
+                        headers=headers,
+                        timeout=30.0,
+                    )
+
+                response.raise_for_status()
+                logger.info(
+                    f"Webhook '{webhook_name}' succeeded on attempt {attempt}: "
+                    f"{response.status_code}"
                 )
-            else:  # GET, DELETE
-                response = await client.request(
-                    method=method,
-                    url=url,
-                    headers=headers,
-                    timeout=30.0,
-                )
+                return True
 
-            response.raise_for_status()
-            logger.info(f"Webhook '{webhook_name}' succeeded: {response.status_code}")
-            return True
+        except httpx.HTTPStatusError as e:
+            logger.warning(
+                f"Webhook '{webhook_name}' attempt {attempt}/{max_attempts} failed: "
+                f"{e.response.status_code} - {e.response.text[:200]}"
+            )
+            if attempt >= max_attempts:
+                return False
+        except httpx.RequestError as e:
+            logger.warning(
+                f"Webhook '{webhook_name}' attempt {attempt}/{max_attempts} "
+                f"request error: {e}"
+            )
+            if attempt >= max_attempts:
+                return False
+        except Exception as e:
+            logger.error(
+                f"Webhook '{webhook_name}' attempt {attempt}/{max_attempts} "
+                f"unexpected error: {e}"
+            )
+            if attempt >= max_attempts:
+                return False
 
-    except httpx.HTTPStatusError as e:
-        logger.warning(
-            f"Webhook '{webhook_name}' failed: {e.response.status_code} - {e.response.text[:200]}"
-        )
-        return False
-    except httpx.RequestError as e:
-        logger.warning(f"Webhook '{webhook_name}' request error: {e}")
-        return False
-    except Exception as e:
-        logger.error(f"Webhook '{webhook_name}' unexpected error: {e}")
-        return False
+        if attempt < max_attempts:
+            delay = backoff_seconds * (2 ** (attempt - 1))
+            logger.info(
+                f"Webhook '{webhook_name}' retrying in {delay:.1f}s "
+                f"(attempt {attempt + 1}/{max_attempts})"
+            )
+            await asyncio.sleep(delay)
+
+    return False

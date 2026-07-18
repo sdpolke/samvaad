@@ -1,7 +1,7 @@
 import csv
 import hashlib
 from io import StringIO
-from typing import List, Optional
+from typing import Any, List, Optional
 
 import httpx
 from loguru import logger
@@ -39,7 +39,10 @@ class CSVSyncService(CampaignSourceSyncService):
         return self._parse_csv(csv_content)
 
     async def validate_source(
-        self, source_id: str, organization_id: Optional[int] = None
+        self,
+        source_id: str,
+        organization_id: Optional[int] = None,
+        source_config: Optional[dict[str, Any]] = None,
     ) -> ValidationResult:
         """Validate a CSV source file for campaign creation."""
         try:

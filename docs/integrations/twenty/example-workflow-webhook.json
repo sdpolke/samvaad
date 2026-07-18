@@ -1,0 +1,42 @@
+{
+  "description": "Example Samvaad webhook node for syncing call outcomes to Twenty CRM. Copy the node into your agent workflow definition.",
+  "webhook_node": {
+    "id": "webhook-twenty-sync",
+    "type": "webhook",
+    "position": { "x": 800, "y": 0 },
+    "data": {
+      "name": "Notify Twenty",
+      "enabled": true,
+      "http_method": "PATCH",
+      "endpoint_url": "https://twenty.example.com/rest/person/{{initial_context.twenty_record_id}}",
+      "credential_uuid": "REPLACE_WITH_TWENTY_BEARER_CREDENTIAL_UUID",
+      "custom_headers": [
+        {
+          "key": "X-Integration-Contract-Version",
+          "value": "1.0"
+        }
+      ],
+      "payload_template": {
+        "contract_version": "1.0",
+        "callStatus": "{{gathered_context.call_disposition}}",
+        "lastCallRunId": "{{workflow_run_id}}",
+        "recordingUrl": "{{recording_url}}",
+        "transcriptUrl": "{{transcript_url}}",
+        "callDurationSeconds": "{{cost_info.call_duration_seconds}}",
+        "correlationId": "{{initial_context.external_correlation_id}}",
+        "twentyEventId": "{{initial_context.twenty_event_id}}"
+      },
+      "retry_enabled": true,
+      "retry_max_attempts": 3,
+      "retry_backoff_seconds": 2
+    }
+  },
+  "initial_context_expected_from_twenty": {
+    "twenty_object": "person",
+    "twenty_record_id": "uuid-from-twenty-record",
+    "twenty_event_id": "twenty-workflow-run-id",
+    "external_correlation_id": "set-by-samvaad-from-x-correlation-id-header",
+    "first_name": "Jane",
+    "company_name": "Acme Corp"
+  }
+}
