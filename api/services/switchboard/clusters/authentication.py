@@ -98,13 +98,23 @@ def _identity_tool_uuids() -> list[str]:
 # ---------------------------------------------------------------------------
 
 _PHONE_PROMPT = (
-    "Ask for the caller's phone number. "
-    "If {{caller_is_provider}} is true, say: \""
+    "You are collecting the caller's phone number so their record can be looked "
+    "up. Ask for it: if {{caller_is_provider}} is true, say: \""
     + scripts.AUTH_PHONE_PROVIDER
     + '" Otherwise say: "'
     + scripts.AUTH_PHONE_PATIENT
-    + '" Extract the phone number from the caller\'s response. '
-    "Track the number of phone number attempts in {{auth_phone_attempts}}."
+    + '"\n\n'
+    "Collect a COMPLETE 10-digit US phone number. Count the digits: if the caller "
+    "gives fewer or more than 10 digits, or you are unsure of any digit, ask them "
+    "to repeat the full 10-digit number and stay on this step — never proceed with "
+    "an incomplete number. Extract the number into caller_phone and increment "
+    "{{auth_phone_attempts}} each time you ask.\n\n"
+    "Stay strictly on this step. Do NOT ask for the caller's date of birth, and "
+    "do NOT attempt any patient lookup, records search, or other tool here — the "
+    "only actions available to you are this node's flow transitions, and identity "
+    "is verified later in the flow. If a previous lookup found no record, simply "
+    "ask for a different phone number; do not switch to a different way of "
+    "identifying the patient."
 )
 
 _READBACK_PROMPT = (
