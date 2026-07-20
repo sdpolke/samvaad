@@ -951,6 +951,9 @@ class TestCustomToolManagerUnit:
             mock_engine
         )
         mock_engine.llm = mock_llm
+        # The http tool handler records each call via register_tool_call (loop
+        # guard); return a real int so the guard comparison works.
+        mock_engine.register_tool_call = Mock(return_value=1)
 
         manager = CustomToolManager(mock_engine)
 

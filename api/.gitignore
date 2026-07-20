@@ -1,2 +1,3 @@
-services/admin_utils
+services/admin_utils/*
+!services/admin_utils/register_switchboard_template.py
 services/gender/names

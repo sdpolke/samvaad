@@ -29,6 +29,11 @@ from api.services.mps_service_key_client import mps_service_key_client
 from api.services.posthog_client import capture_event
 from api.services.reports import generate_workflow_report_csv
 from api.services.storage import storage_fs
+from api.services.switchboard.enablement.instantiator import (
+    SwitchboardInstantiationError,
+    instantiate_switchboard,
+)
+from api.services.switchboard.enablement.registrar import SWITCHBOARD_TEMPLATE_NAME
 from api.services.workflow.dto import ReactFlowDTO, sanitize_workflow_definition
 from api.services.workflow.duplicate import duplicate_workflow
 from api.services.workflow.errors import ItemKind, WorkflowError
@@ -567,6 +572,134 @@ async def create_workflow_from_template(
             status_code=500,
             detail=f"An unexpected error occurred: {str(e)}",
         )
+
+
+# Static /templates routes must be registered before /{workflow_id}/... or
+# Starlette matches "templates" as workflow_id and returns a 422 int_parsing
+# error instead of reaching these handlers.
+@router.get("/templates")
+async def get_workflow_templates() -> List[WorkflowTemplateResponse]:
+    """
+    Get all available workflow templates.
+
+    Returns:
+        List of workflow templates
+    """
+    template_client = WorkflowTemplateClient()
+    templates = await template_client.get_all_workflow_templates()
+
+    return [
+        {
+            "id": template.id,
+            "template_name": template.template_name,
+            "template_description": template.template_description,
+            "template_json": template.template_json,
+            "created_at": template.created_at,
+        }
+        for template in templates
+    ]
+
+
+@router.post("/templates/duplicate")
+async def duplicate_workflow_template(
+    request: DuplicateTemplateRequest, user: UserModel = Depends(get_user)
+) -> WorkflowResponse:
+    """
+    Duplicate a workflow template to create a new workflow for the user.
+
+    Args:
+        request: The duplicate template request
+        user: The authenticated user
+
+    Returns:
+        The newly created workflow
+    """
+    template_client = WorkflowTemplateClient()
+    template = await template_client.get_workflow_template(request.template_id)
+
+    if not template:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Workflow template with id {request.template_id} not found",
+        )
+
+    if template.template_name == SWITCHBOARD_TEMPLATE_NAME:
+        # The switchboard template needs org-scoped tool provisioning and
+        # tool-reference reconciliation before it is a runnable workflow, so
+        # this delegates to the Template_Instantiator instead of the bare
+        # create path below (Design "Routes are extended, not replaced",
+        # Req 2.3, 3.1-3.6, 5.4).
+        try:
+            workflow = await instantiate_switchboard(
+                template=template,
+                organization_id=user.selected_organization_id,
+                user_id=user.id,
+                workflow_name=request.workflow_name,
+            )
+        except SwitchboardInstantiationError as exc:
+            errors: list[WorkflowError] = [
+                WorkflowError(
+                    kind=ItemKind.workflow,
+                    id=None,
+                    field=exc.reason,
+                    message=message,
+                )
+                for message in (exc.errors or [str(exc)])
+            ]
+            raise _validation_errors_http_exception(errors)
+
+        return {
+            "id": workflow.id,
+            "name": workflow.name,
+            "status": workflow.status,
+            "created_at": workflow.created_at,
+            "workflow_definition": mask_workflow_definition(
+                workflow.workflow_definition
+            ),
+            "current_definition_id": workflow.current_definition_id,
+            "template_context_variables": workflow.template_context_variables,
+            "call_disposition_codes": workflow.call_disposition_codes,
+            "workflow_configurations": workflow.workflow_configurations,
+        }
+
+    # Create a new workflow from the template
+    # Regenerate trigger UUIDs to avoid conflicts with existing triggers
+    workflow_def = regenerate_trigger_uuids(template.template_json)
+
+    trigger_paths = extract_trigger_paths(workflow_def) if workflow_def else []
+    if trigger_paths:
+        try:
+            await db_client.assert_trigger_paths_available(
+                trigger_paths=trigger_paths,
+            )
+        except TriggerPathConflictError as e:
+            raise HTTPException(status_code=409, detail=str(e))
+
+    workflow = await db_client.create_workflow(
+        request.workflow_name,
+        workflow_def,
+        user.id,
+        user.selected_organization_id,
+    )
+
+    if trigger_paths:
+        await db_client.sync_triggers_for_workflow(
+            workflow_id=workflow.id,
+            organization_id=user.selected_organization_id,
+            trigger_paths=trigger_paths,
+        )
+
+    return {
+        "id": workflow.id,
+        "name": workflow.name,
+        "status": workflow.status,
+        "created_at": workflow.created_at,
+        "workflow_definition": mask_workflow_definition(workflow_def),
+        "current_definition_id": workflow.current_definition_id,
+        "template_context_variables": workflow.template_context_variables,
+        "call_disposition_codes": workflow.call_disposition_codes,
+        "workflow_configurations": workflow.workflow_configurations,
+    }
 
 
 class WorkflowSummaryResponse(BaseModel):
@@ -1248,92 +1381,6 @@ async def download_workflow_report(
         media_type="text/csv",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
-
-
-@router.get("/templates")
-async def get_workflow_templates() -> List[WorkflowTemplateResponse]:
-    """
-    Get all available workflow templates.
-
-    Returns:
-        List of workflow templates
-    """
-    template_client = WorkflowTemplateClient()
-    templates = await template_client.get_all_workflow_templates()
-
-    return [
-        {
-            "id": template.id,
-            "template_name": template.template_name,
-            "template_description": template.template_description,
-            "template_json": template.template_json,
-            "created_at": template.created_at,
-        }
-        for template in templates
-    ]
-
-
-@router.post("/templates/duplicate")
-async def duplicate_workflow_template(
-    request: DuplicateTemplateRequest, user: UserModel = Depends(get_user)
-) -> WorkflowResponse:
-    """
-    Duplicate a workflow template to create a new workflow for the user.
-
-    Args:
-        request: The duplicate template request
-        user: The authenticated user
-
-    Returns:
-        The newly created workflow
-    """
-    template_client = WorkflowTemplateClient()
-    template = await template_client.get_workflow_template(request.template_id)
-
-    if not template:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Workflow template with id {request.template_id} not found",
-        )
-
-    # Create a new workflow from the template
-    # Regenerate trigger UUIDs to avoid conflicts with existing triggers
-    workflow_def = regenerate_trigger_uuids(template.template_json)
-
-    trigger_paths = extract_trigger_paths(workflow_def) if workflow_def else []
-    if trigger_paths:
-        try:
-            await db_client.assert_trigger_paths_available(
-                trigger_paths=trigger_paths,
-            )
-        except TriggerPathConflictError as e:
-            raise HTTPException(status_code=409, detail=str(e))
-
-    workflow = await db_client.create_workflow(
-        request.workflow_name,
-        workflow_def,
-        user.id,
-        user.selected_organization_id,
-    )
-
-    if trigger_paths:
-        await db_client.sync_triggers_for_workflow(
-            workflow_id=workflow.id,
-            organization_id=user.selected_organization_id,
-            trigger_paths=trigger_paths,
-        )
-
-    return {
-        "id": workflow.id,
-        "name": workflow.name,
-        "status": workflow.status,
-        "created_at": workflow.created_at,
-        "workflow_definition": mask_workflow_definition(workflow_def),
-        "current_definition_id": workflow.current_definition_id,
-        "template_context_variables": workflow.template_context_variables,
-        "call_disposition_codes": workflow.call_disposition_codes,
-        "workflow_configurations": workflow.workflow_configurations,
-    }
 
 
 # ---------------------------------------------------------------------------

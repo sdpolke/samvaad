@@ -11,11 +11,18 @@ from api.db import db_client
 from api.utils.credential_auth import build_auth_header
 from api.utils.template_renderer import render_template
 
-# Map tool parameter types to JSON schema types
+# Map tool parameter types to JSON schema types. Includes the structured types
+# (integer/object/array) so a non-scalar parameter is advertised to the LLM with
+# its real type instead of silently collapsing to "string" — a mismatch that
+# makes providers reject the tool call when the model emits the correct shape
+# (e.g. an object for identity_verify's verification_signals).
 TYPE_MAP = {
     "string": "string",
     "number": "number",
+    "integer": "integer",
     "boolean": "boolean",
+    "object": "object",
+    "array": "array",
 }
 
 
@@ -45,10 +52,20 @@ def tool_to_function_schema(tool: Any) -> Dict[str, Any]:
         if not param_name:
             continue
 
-        properties[param_name] = {
-            "type": TYPE_MAP.get(param_type, "string"),
+        json_type = TYPE_MAP.get(param_type, "string")
+        prop_schema: Dict[str, Any] = {
+            "type": json_type,
             "description": param_desc,
         }
+        # Free-form structured params carry no nested shape in the flat tool
+        # definition, so advertise permissive containers the LLM can fill:
+        # objects accept arbitrary keys; arrays need an ``items`` schema or
+        # strict providers reject them.
+        if json_type == "object":
+            prop_schema["additionalProperties"] = True
+        elif json_type == "array":
+            prop_schema["items"] = {}
+        properties[param_name] = prop_schema
 
         if param_required:
             required.append(param_name)
@@ -169,6 +186,69 @@ def _resolve_preset_parameters(
     return resolved
 
 
+async def _invoke_unbound_connector_mock(
+    *,
+    connector_name: str,
+    arguments: Dict[str, Any],
+    organization_id: Optional[int],
+) -> Optional[Dict[str, Any]]:
+    """Service an unbound switchboard connector tool via its mock backend.
+
+    Connector tools provisioned by the switchboard enablement layer
+    (``api/services/switchboard/tools/registry.py``) default to an unbound
+    ``ConnectorBinding`` (empty ``config.url``) until a real SpinSci endpoint is
+    configured. Per the switchboard requirements ("WHILE a Connector_Tool has no
+    configured Tool_Binding endpoint, service that tool through its deterministic
+    mock backend"), such a tool must never attempt a real HTTP call.
+
+    The provisioner stamps ``definition["switchboard"]["connector_name"]`` onto
+    every provisioned tool (the same marker used for idempotent re-provisioning),
+    so it doubles as a stable, self-describing signal that this ``ToolModel`` maps
+    back to a registered :class:`~api.services.switchboard.tools.base.ConnectorTool`.
+    When that marker is present, dispatch to ``ConnectorTool.invoke`` instead of
+    making an HTTP request.
+
+    Args:
+        connector_name: The ``switchboard.connector_name`` marker from the tool
+            definition.
+        arguments: The LLM-supplied arguments to validate against the connector's
+            switchboard-side input contract.
+        organization_id: Tenant context forwarded to the mock backend.
+
+    Returns:
+        A result dict (``{"status": "success", "data": ...}``) if the connector
+        name resolves to a registered tool, else ``None`` so the caller can fall
+        back to a normal HTTP attempt (e.g. if the marker is stale).
+    """
+    try:
+        from api.services.switchboard.tools.registry import get_connector_tool
+    except ImportError:
+        return None
+
+    try:
+        connector_tool = get_connector_tool(connector_name)
+    except KeyError:
+        logger.warning(
+            f"No registered switchboard connector tool named '{connector_name}'; "
+            "falling back to HTTP attempt"
+        )
+        return None
+
+    logger.info(
+        f"Connector tool '{connector_name}' is unbound (no endpoint configured); "
+        "servicing via its mock backend instead of a real HTTP request"
+    )
+    try:
+        output = await connector_tool.invoke(
+            arguments, organization_id=organization_id
+        )
+    except Exception as e:
+        logger.error(f"Mock backend for connector '{connector_name}' failed: {e}")
+        return {"status": "error", "error": f"Mock backend failed: {e}"}
+
+    return {"status": "success", "status_code": 200, "data": output.model_dump()}
+
+
 async def execute_http_tool(
     tool: Any,
     arguments: Dict[str, Any],
@@ -194,6 +274,20 @@ async def execute_http_tool(
     # Get HTTP method and URL
     method = config.get("method", "POST").upper()
     url = config.get("url", "")
+
+    # An unbound switchboard connector tool (no endpoint configured yet) must be
+    # serviced by its deterministic mock backend rather than attempting a real
+    # HTTP call against an empty URL.
+    if not url:
+        connector_name = (definition.get("switchboard") or {}).get("connector_name")
+        if connector_name:
+            mock_result = await _invoke_unbound_connector_mock(
+                connector_name=connector_name,
+                arguments=arguments,
+                organization_id=organization_id,
+            )
+            if mock_result is not None:
+                return mock_result
 
     # Get headers from config
     headers = dict(config.get("headers", {}) or {})

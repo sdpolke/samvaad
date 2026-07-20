@@ -11,8 +11,16 @@ from api.enums import StorageBackend
 from api.services.storage import get_storage_for_backend, storage_fs
 
 
-def _extract_trigger_paths(workflow_definition: dict) -> list[str]:
-    """Extract trigger UUIDs from workflow definition."""
+def extract_trigger_paths(workflow_definition: dict) -> list[str]:
+    """Extract trigger UUIDs from a workflow definition.
+
+    Shared services-layer helper (promoted from a private duplicate.py
+    helper) so callers outside `api/routes/` — e.g. the switchboard
+    enablement `Template_Instantiator` — can reuse it without importing from
+    `api/routes/workflow.py` (which would violate the routes -> services ->
+    db layering rule). `api/routes/workflow.py` keeps its own equivalent
+    top-level function for its existing call sites.
+    """
     if not workflow_definition:
         return []
     nodes = workflow_definition.get("nodes", [])
@@ -25,8 +33,12 @@ def _extract_trigger_paths(workflow_definition: dict) -> list[str]:
     return trigger_paths
 
 
-def _regenerate_trigger_uuids(workflow_definition: dict) -> dict:
-    """Regenerate UUIDs for all trigger nodes to avoid conflicts."""
+def regenerate_trigger_uuids(workflow_definition: dict) -> dict:
+    """Regenerate UUIDs for all trigger nodes to avoid conflicts.
+
+    Shared services-layer helper — see `extract_trigger_paths` docstring for
+    why this lives here rather than being imported from `api/routes/`.
+    """
     if not workflow_definition:
         return workflow_definition
     updated_definition = copy.deepcopy(workflow_definition)
@@ -72,7 +84,7 @@ async def duplicate_workflow(
 
     # 3. Regenerate trigger UUIDs to avoid conflicts
     if workflow_definition:
-        workflow_definition = _regenerate_trigger_uuids(workflow_definition)
+        workflow_definition = regenerate_trigger_uuids(workflow_definition)
 
     # 4. Create the new workflow
     new_name = f"{source.name} - Duplicate"
@@ -122,7 +134,7 @@ async def duplicate_workflow(
 
     # 6. Sync triggers for the new workflow
     if workflow_definition:
-        trigger_paths = _extract_trigger_paths(workflow_definition)
+        trigger_paths = extract_trigger_paths(workflow_definition)
         if trigger_paths:
             await db_client.sync_triggers_for_workflow(
                 workflow_id=new_workflow.id,

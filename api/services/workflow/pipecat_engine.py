@@ -93,6 +93,9 @@ class PipecatEngine:
         self._call_disposed = False
         self._current_node: Optional[Node] = None
         self._gathered_context: dict = {}
+        # Per-node tool-call counters (function_name -> count), reset on node
+        # change. Used to break unbounded repeated tool-call loops.
+        self._node_tool_call_counts: dict[str, int] = {}
         self._user_response_timeout_task: Optional[asyncio.Task] = None
         self._pending_extraction_tasks: set[asyncio.Task] = set()
 
@@ -551,6 +554,11 @@ class PipecatEngine:
         # Set current node for all nodes (including static ones) so STT mute filter works
         self._current_node = node
 
+        # Reset per-node tool-call counters on a genuine node change so the
+        # loop guard measures calls within a single node's turn(s).
+        if previous_node_id != node_id:
+            self._node_tool_call_counts = {}
+
         # Track visited nodes in gathered context for call tags
         nodes_visited = self._gathered_context.setdefault("nodes_visited", [])
         if node.name not in nodes_visited:
@@ -584,6 +592,17 @@ class PipecatEngine:
         # to clean up tool calls from previous nodes
         if previous_node_id is not None and self._context_summarization_manager:
             self._context_summarization_manager.start()
+#Added by Shrijeet
+    def register_tool_call(self, function_name: str) -> int:
+        """Record an invocation of ``function_name`` on the current node.
+
+        Returns the running count of calls to this tool since the last node
+        change. Used by the custom-tool handler to break unbounded repeated
+        tool-call loops (a node that keeps calling a tool without transitioning).
+        """
+        count = self._node_tool_call_counts.get(function_name, 0) + 1
+        self._node_tool_call_counts[function_name] = count
+        return count
 
     async def _handle_start_node(self, node: Node) -> None:
         """Handle start node execution."""

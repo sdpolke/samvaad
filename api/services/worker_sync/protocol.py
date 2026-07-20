@@ -15,6 +15,8 @@ class WorkerSyncEventType(str, Enum):
     """Types of worker sync events."""
 
     LANGFUSE_CREDENTIALS = "langfuse_credentials"
+    SWITCHBOARD_BUSINESS_HOURS = "switchboard_business_hours"
+    SWITCHBOARD_HOTWORDS = "switchboard_hotwords"
 
 
 @dataclass

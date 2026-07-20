@@ -37,6 +37,12 @@ if TYPE_CHECKING:
     from api.services.workflow.mcp_tool_session import McpToolSession
     from api.services.workflow.pipecat_engine import PipecatEngine
 
+#: Max times the same tool may be invoked on a single node (before a node
+#: transition) before the engine refuses further calls and nudges the model to
+#: transition. Set high enough that legitimate multi-call nodes are unaffected,
+#: low enough to stop a runaway loop quickly.
+MAX_CONSECUTIVE_TOOL_CALLS_PER_NODE = 8
+
 
 def get_function_schema(
     function_name: str,
@@ -334,6 +340,29 @@ class CustomToolManager:
         ) -> None:
             logger.info(f"HTTP Tool EXECUTED: {function_name}")
             logger.info(f"Arguments: {function_call_params.arguments}")
+
+            # Loop guard: if the model calls the same tool many times on the same
+            # node without transitioning, stop executing it and tell the model to
+            # move on. This prevents an unbounded tool-call loop when a node lacks
+            # a valid onward transition for the current tool result.
+            count = self._engine.register_tool_call(function_name)
+            if count > MAX_CONSECUTIVE_TOOL_CALLS_PER_NODE:
+                logger.warning(
+                    f"Tool '{function_name}' called {count} times on node "
+                    f"'{self._engine._current_node.name if self._engine._current_node else '?'}' "
+                    "without transitioning; blocking further calls this turn"
+                )
+                await function_call_params.result_callback(
+                    {
+                        "status": "error",
+                        "error": (
+                            "This tool has already been called and returned a "
+                            "result. Do not call it again. Choose one of the "
+                            "available transitions to continue."
+                        ),
+                    }
+                )
+                return
 
             try:
                 # Queue custom message before executing the API call

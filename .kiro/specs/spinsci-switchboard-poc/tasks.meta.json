@@ -1,0 +1,1459 @@
+{
+  "pbtResults": {
+    "12.2 Write property test for restricted-service connect decision": {
+      "status": "passed",
+      "lastRunTimestamp": 1784378486262
+    },
+    "12.3 Write property test for the hotword path": {
+      "status": "passed",
+      "lastRunTimestamp": 1784378560289
+    },
+    "12.4 Write property test for Billing/MyChart closed": {
+      "status": "passed",
+      "lastRunTimestamp": 1784361528088
+    },
+    "2.2 Write property test for the schedule evaluator": {
+      "status": "passed",
+      "lastRunTimestamp": 1784365420750
+    },
+    "3.2 Write property test for full-carry ledger": {
+      "status": "passed",
+      "lastRunTimestamp": 1784365593133
+    },
+    "3.3 Write property test for never-re-ask": {
+      "status": "passed",
+      "lastRunTimestamp": 1784366396107
+    },
+    "3.4 Write property test for intent vs routing-intent separation": {
+      "status": "passed",
+      "lastRunTimestamp": 1784366557803
+    },
+    "4.3 Write property test for render fidelity": {
+      "status": "passed",
+      "lastRunTimestamp": 1784366920806
+    },
+    "4.5 Write property test for no internal narration": {
+      "status": "passed",
+      "lastRunTimestamp": 1784367357227
+    },
+    "4.6 Write property test for medication-name omission": {
+      "status": "passed",
+      "lastRunTimestamp": 1784367656171
+    },
+    "5.2 Write property test for the phone read-back round-trip": {
+      "status": "passed",
+      "lastRunTimestamp": 1784367817198
+    },
+    "6.2 Write property test for greeting turn-1 post-state": {
+      "status": "passed",
+      "lastRunTimestamp": 1784367983211
+    },
+    "6.3 Write property test for greeting script selection": {
+      "status": "passed",
+      "lastRunTimestamp": 1784368201426
+    },
+    "6.4 Write property test for name-alone insufficiency": {
+      "status": "passed",
+      "lastRunTimestamp": 1784368392604
+    },
+    "6.5 Write property test for Path E repeat-then-fallback": {
+      "status": "passed",
+      "lastRunTimestamp": 1784368529110
+    },
+    "8.2 Write property test for appointment-action classification": {
+      "status": "passed",
+      "lastRunTimestamp": 1784369262692
+    },
+    "8.4 Write property test for lookup-speech prefix rules": {
+      "status": "passed",
+      "lastRunTimestamp": 1784369439303
+    },
+    "8.6 Write property test for manage-action consequences": {
+      "status": "passed",
+      "lastRunTimestamp": 1784369626204
+    },
+    "9.2 Write property test for the authentication gate": {
+      "status": "passed",
+      "lastRunTimestamp": 1784372729690
+    },
+    "9.4 Write property test for ANI non-repeat in Authentication": {
+      "status": "passed",
+      "lastRunTimestamp": 1784372886637
+    },
+    "9.5 Write property test for fail/refusal-still-connects": {
+      "status": "passed",
+      "lastRunTimestamp": 1784373107191
+    },
+    "9.6 Write property test for changed-request return": {
+      "status": "passed",
+      "lastRunTimestamp": 1784373234548
+    },
+    "9.7 Write property test for DOB-determined verification": {
+      "status": "passed",
+      "lastRunTimestamp": 1784373406339
+    },
+    "11.5 Write property test for terminal-turn line-only": {
+      "status": "passed",
+      "lastRunTimestamp": 1784378020207
+    },
+    "11.6 Write property test for after-hours routing-mode gating": {
+      "status": "passed",
+      "lastRunTimestamp": 1784378141720
+    },
+    "11.7 Write property test for lab-results routing": {
+      "status": "passed",
+      "lastRunTimestamp": 1784378273577
+    },
+    "11.8 Write property test for new-patient create routing": {
+      "status": "passed",
+      "lastRunTimestamp": 1784378413710
+    },
+    "11.3 Write property test for the sequential exact-string chain": {
+      "status": "passed",
+      "lastRunTimestamp": 1784378789707
+    },
+    "11.2 Write property test for zero-speech resolution": {
+      "status": "passed",
+      "lastRunTimestamp": 1784378935238
+    },
+    "13.2 Write property test for visit-type resolution/disambiguation": {
+      "status": "passed",
+      "lastRunTimestamp": 1784379222457
+    },
+    "13.3 Write property test for switchboard never setting visit type": {
+      "status": "passed",
+      "lastRunTimestamp": 1784379364463
+    },
+    "13.4 Write property test for scheduling-engine input completeness": {
+      "status": "passed",
+      "lastRunTimestamp": 1784379545159
+    },
+    "16.7 Write property test for the silent-transition invariant": {
+      "status": "passed",
+      "lastRunTimestamp": 1784381061035
+    }
+  },
+  "executionHistory": {
+    "1.1 Create `api/services/switchboard/` package and the Call State Ledger model": [
+      {
+        "executionId": "95de0618-a852-46c3-baea-b1ad2b82a6ca",
+        "chatSessionId": "sess_5dabe481-8992-4d1b-bb38-f7d6e1737a07",
+        "timestamp": 1784346463466
+      },
+      {
+        "executionId": "95de0618-a852-46c3-baea-b1ad2b82a6ca",
+        "chatSessionId": "sess_5dabe481-8992-4d1b-bb38-f7d6e1737a07",
+        "timestamp": 1784346684326
+      }
+    ],
+    "1.2 Implement schedule/session configuration module (`config.py`)": [
+      {
+        "executionId": "95de0618-a852-46c3-baea-b1ad2b82a6ca",
+        "chatSessionId": "sess_5dabe481-8992-4d1b-bb38-f7d6e1737a07",
+        "timestamp": 1784346464107
+      },
+      {
+        "executionId": "95de0618-a852-46c3-baea-b1ad2b82a6ca",
+        "chatSessionId": "sess_5dabe481-8992-4d1b-bb38-f7d6e1737a07",
+        "timestamp": 1784346685145
+      }
+    ],
+    "1. Scaffold switchboard package, Call State Ledger, and schedule/session config": [
+      {
+        "executionId": "95de0618-a852-46c3-baea-b1ad2b82a6ca",
+        "chatSessionId": "sess_5dabe481-8992-4d1b-bb38-f7d6e1737a07",
+        "timestamp": 1784346685175
+      }
+    ],
+    "3.1 Implement full-carry reducer, `should_ask(field, ledger)`, and routing-intent separation in `ledger.py`": [
+      {
+        "executionId": "a55b1434-f564-4806-84df-21d59b14fee6",
+        "chatSessionId": "sess_cd6fe418-c790-448d-8f03-fcf5a893d746",
+        "timestamp": 1784346735288
+      },
+      {
+        "executionId": "0e98cc88-0082-4e45-88da-121042b29d09",
+        "chatSessionId": "sess_b40f0075-b10f-49e4-82be-75853cf2cb8b",
+        "timestamp": 1784347172540
+      },
+      {
+        "executionId": "0e98cc88-0082-4e45-88da-121042b29d09",
+        "chatSessionId": "sess_b40f0075-b10f-49e4-82be-75853cf2cb8b",
+        "timestamp": 1784347500213
+      }
+    ],
+    "2.1 Implement `is_after_hours(dt_local) -> bool` in `schedule.py`": [
+      {
+        "executionId": "814b3874-8d4c-4fe0-a99b-4cdb2405119c",
+        "chatSessionId": "sess_b0e06295-be58-4756-bf69-622483ebc8c6",
+        "timestamp": 1784346948841
+      },
+      {
+        "executionId": "814b3874-8d4c-4fe0-a99b-4cdb2405119c",
+        "chatSessionId": "sess_b0e06295-be58-4756-bf69-622483ebc8c6",
+        "timestamp": 1784347120354
+      }
+    ],
+    "2. Implement the after-hours schedule evaluator": [
+      {
+        "executionId": "814b3874-8d4c-4fe0-a99b-4cdb2405119c",
+        "chatSessionId": "sess_b0e06295-be58-4756-bf69-622483ebc8c6",
+        "timestamp": 1784347120398
+      }
+    ],
+    "3. Implement the ledger reducer, never-re-ask predicate, and intent separation": [
+      {
+        "executionId": "0e98cc88-0082-4e45-88da-121042b29d09",
+        "chatSessionId": "sess_b40f0075-b10f-49e4-82be-75853cf2cb8b",
+        "timestamp": 1784347500242
+      }
+    ],
+    "4.1 Create `scripts.py` with Appendix C/E verbatim lines as constants": [
+      {
+        "executionId": "5a27f1a3-82b0-449c-b093-37786c648b36",
+        "chatSessionId": "sess_c87e2c25-d0fd-430d-85d8-fb1d2e336d4c",
+        "timestamp": 1784347600057
+      },
+      {
+        "executionId": "5a27f1a3-82b0-449c-b093-37786c648b36",
+        "chatSessionId": "sess_c87e2c25-d0fd-430d-85d8-fb1d2e336d4c",
+        "timestamp": 1784348328723
+      }
+    ],
+    "4.2 Implement `render(template, placeholders)` plus narration/medication guards": [
+      {
+        "executionId": "5a27f1a3-82b0-449c-b093-37786c648b36",
+        "chatSessionId": "sess_c87e2c25-d0fd-430d-85d8-fb1d2e336d4c",
+        "timestamp": 1784348333293
+      },
+      {
+        "executionId": "5a27f1a3-82b0-449c-b093-37786c648b36",
+        "chatSessionId": "sess_c87e2c25-d0fd-430d-85d8-fb1d2e336d4c",
+        "timestamp": 1784348840284
+      }
+    ],
+    "4. Implement verbatim script assets and the script renderer": [
+      {
+        "executionId": "5a27f1a3-82b0-449c-b093-37786c648b36",
+        "chatSessionId": "sess_c87e2c25-d0fd-430d-85d8-fb1d2e336d4c",
+        "timestamp": 1784348840328
+      }
+    ],
+    "5.1 Implement 3-3-4 period-grouped formatter and digit extractor in `phone.py`": [
+      {
+        "executionId": "b8a785da-39f7-46fc-970d-0831ad0414d2",
+        "chatSessionId": "sess_06241ada-a51a-4f17-b42f-560f1ee9f8c1",
+        "timestamp": 1784348892149
+      },
+      {
+        "executionId": "b8a785da-39f7-46fc-970d-0831ad0414d2",
+        "chatSessionId": "sess_06241ada-a51a-4f17-b42f-560f1ee9f8c1",
+        "timestamp": 1784349253221
+      }
+    ],
+    "5. Implement the phone read-back formatter": [
+      {
+        "executionId": "b8a785da-39f7-46fc-970d-0831ad0414d2",
+        "chatSessionId": "sess_06241ada-a51a-4f17-b42f-560f1ee9f8c1",
+        "timestamp": 1784349253252
+      }
+    ],
+    "6.1 Implement `select_greeting`, `ready_to_handoff`, turn-1 post-state builder, and Path E retry machine in `greeting.py`": [
+      {
+        "executionId": "4162f2c8-4915-4b44-8ee2-7b2d4ab91286",
+        "chatSessionId": "sess_c8ed31dc-075f-48d3-8cf0-cc98cc41d392",
+        "timestamp": 1784349294776
+      },
+      {
+        "executionId": "4162f2c8-4915-4b44-8ee2-7b2d4ab91286",
+        "chatSessionId": "sess_c8ed31dc-075f-48d3-8cf0-cc98cc41d392",
+        "timestamp": 1784349687484
+      }
+    ],
+    "6. Implement Greeting-phase pure logic": [
+      {
+        "executionId": "4162f2c8-4915-4b44-8ee2-7b2d4ab91286",
+        "chatSessionId": "sess_c8ed31dc-075f-48d3-8cf0-cc98cc41d392",
+        "timestamp": 1784349687515
+      }
+    ],
+    "8.1 Implement the appointment_action classifier mapping in `business_hours.py`": [
+      {
+        "executionId": "887b1d64-cf15-42ff-bcda-bc9d8ef4b0d9",
+        "chatSessionId": "sess_fb969aa6-2957-493b-b139-5d3ddce98a0f",
+        "timestamp": 1784349747987
+      },
+      {
+        "executionId": "887b1d64-cf15-42ff-bcda-bc9d8ef4b0d9",
+        "chatSessionId": "sess_fb969aa6-2957-493b-b139-5d3ddce98a0f",
+        "timestamp": 1784350196586
+      }
+    ],
+    "8.3 Implement lookup-speech prefix rules in `business_hours.py`": [
+      {
+        "executionId": "887b1d64-cf15-42ff-bcda-bc9d8ef4b0d9",
+        "chatSessionId": "sess_fb969aa6-2957-493b-b139-5d3ddce98a0f",
+        "timestamp": 1784350201084
+      },
+      {
+        "executionId": "887b1d64-cf15-42ff-bcda-bc9d8ef4b0d9",
+        "chatSessionId": "sess_fb969aa6-2957-493b-b139-5d3ddce98a0f",
+        "timestamp": 1784355380610
+      }
+    ],
+    "8.5 Implement manage-action consequences and the BH classification-retry machine in `business_hours.py`": [
+      {
+        "executionId": "887b1d64-cf15-42ff-bcda-bc9d8ef4b0d9",
+        "chatSessionId": "sess_fb969aa6-2957-493b-b139-5d3ddce98a0f",
+        "timestamp": 1784355385164
+      },
+      {
+        "executionId": "887b1d64-cf15-42ff-bcda-bc9d8ef4b0d9",
+        "chatSessionId": "sess_fb969aa6-2957-493b-b139-5d3ddce98a0f",
+        "timestamp": 1784355819165
+      }
+    ],
+    "8. Implement Business-Hours-phase pure logic": [
+      {
+        "executionId": "887b1d64-cf15-42ff-bcda-bc9d8ef4b0d9",
+        "chatSessionId": "sess_fb969aa6-2957-493b-b139-5d3ddce98a0f",
+        "timestamp": 1784355819203
+      }
+    ],
+    "9. Implement Authentication-phase pure logic": [
+      {
+        "executionId": "d1f32b97-7a3f-4b14-9e03-bfe9a7ef452d",
+        "chatSessionId": "sess_ad93abaa-baef-40e2-aef1-664fe1057d65",
+        "timestamp": 1784355903968
+      },
+      {
+        "executionId": "d1f32b97-7a3f-4b14-9e03-bfe9a7ef452d",
+        "chatSessionId": "sess_ad93abaa-baef-40e2-aef1-664fe1057d65",
+        "timestamp": 1784359788601
+      }
+    ],
+    "9.1 Implement the auth-gate decision (auth matrix) in `auth.py`": [
+      {
+        "executionId": "d1f32b97-7a3f-4b14-9e03-bfe9a7ef452d",
+        "chatSessionId": "sess_ad93abaa-baef-40e2-aef1-664fe1057d65",
+        "timestamp": 1784355904234
+      },
+      {
+        "executionId": "d1f32b97-7a3f-4b14-9e03-bfe9a7ef452d",
+        "chatSessionId": "sess_ad93abaa-baef-40e2-aef1-664fe1057d65",
+        "timestamp": 1784356258862
+      }
+    ],
+    "9.3 Implement ANI-reuse guard, fail/refusal-connects, changed-request routing, and DOB verification in `auth.py`": [
+      {
+        "executionId": "d1f32b97-7a3f-4b14-9e03-bfe9a7ef452d",
+        "chatSessionId": "sess_ad93abaa-baef-40e2-aef1-664fe1057d65",
+        "timestamp": 1784356260066
+      },
+      {
+        "executionId": "d1f32b97-7a3f-4b14-9e03-bfe9a7ef452d",
+        "chatSessionId": "sess_ad93abaa-baef-40e2-aef1-664fe1057d65",
+        "timestamp": 1784359788563
+      }
+    ],
+    "11. Implement Routing-phase pure logic": [
+      {
+        "executionId": "1c540aff-fa8f-4529-adc3-f0a5e3feb5e6",
+        "chatSessionId": "sess_8dc94d97-2667-476d-a37d-f83fd3ad00aa",
+        "timestamp": 1784359934038
+      },
+      {
+        "executionId": "1c540aff-fa8f-4529-adc3-f0a5e3feb5e6",
+        "chatSessionId": "sess_8dc94d97-2667-476d-a37d-f83fd3ad00aa",
+        "timestamp": 1784360999159
+      }
+    ],
+    "11.1 Implement the sequential routing-chain sequencer and zero-speech invariant checker in `routing.py`": [
+      {
+        "executionId": "1c540aff-fa8f-4529-adc3-f0a5e3feb5e6",
+        "chatSessionId": "sess_8dc94d97-2667-476d-a37d-f83fd3ad00aa",
+        "timestamp": 1784359934905
+      },
+      {
+        "executionId": "1c540aff-fa8f-4529-adc3-f0a5e3feb5e6",
+        "chatSessionId": "sess_8dc94d97-2667-476d-a37d-f83fd3ad00aa",
+        "timestamp": 1784360358528
+      }
+    ],
+    "11.4 Implement terminal-line selection, AH routing-mode gating, lab→General, new-patient intake, and fallback in `routing.py`": [
+      {
+        "executionId": "1c540aff-fa8f-4529-adc3-f0a5e3feb5e6",
+        "chatSessionId": "sess_8dc94d97-2667-476d-a37d-f83fd3ad00aa",
+        "timestamp": 1784360359044
+      },
+      {
+        "executionId": "1c540aff-fa8f-4529-adc3-f0a5e3feb5e6",
+        "chatSessionId": "sess_8dc94d97-2667-476d-a37d-f83fd3ad00aa",
+        "timestamp": 1784360999119
+      }
+    ],
+    "12.1 Implement restricted-service connect decision, hotword path, and Billing/MyChart-closed in `after_hours.py`": [
+      {
+        "executionId": "a3e3cdc5-13ad-46f8-94e4-4cd2ae2fc68b",
+        "chatSessionId": "sess_c3205840-887e-4997-86e5-2070ac6b5eea",
+        "timestamp": 1784361081732
+      },
+      {
+        "executionId": "a3e3cdc5-13ad-46f8-94e4-4cd2ae2fc68b",
+        "chatSessionId": "sess_c3205840-887e-4997-86e5-2070ac6b5eea",
+        "timestamp": 1784361555852
+      }
+    ],
+    "12. Implement After-Hours-phase pure logic": [
+      {
+        "executionId": "a3e3cdc5-13ad-46f8-94e4-4cd2ae2fc68b",
+        "chatSessionId": "sess_c3205840-887e-4997-86e5-2070ac6b5eea",
+        "timestamp": 1784361555883
+      }
+    ],
+    "12.2 Write property test for restricted-service connect decision": [
+      {
+        "executionId": "a3e3cdc5-13ad-46f8-94e4-4cd2ae2fc68b",
+        "chatSessionId": "sess_c3205840-887e-4997-86e5-2070ac6b5eea",
+        "timestamp": 1784361562463
+      },
+      {
+        "executionId": "d1787eb0-8cb0-4d2b-8fdd-649fc52897d5",
+        "chatSessionId": "sess_45151099-dbff-4c31-b666-4479bac6b369",
+        "timestamp": 1784378446767
+      },
+      {
+        "executionId": "d1787eb0-8cb0-4d2b-8fdd-649fc52897d5",
+        "chatSessionId": "sess_45151099-dbff-4c31-b666-4479bac6b369",
+        "timestamp": 1784378500438
+      }
+    ],
+    "12.3 Write property test for the hotword path": [
+      {
+        "executionId": "a3e3cdc5-13ad-46f8-94e4-4cd2ae2fc68b",
+        "chatSessionId": "sess_c3205840-887e-4997-86e5-2070ac6b5eea",
+        "timestamp": 1784361563486
+      },
+      {
+        "executionId": "e12c068e-5a65-4cb8-9a48-f77af72db85a",
+        "chatSessionId": "sess_49fabd88-d053-4349-803a-494a3ef156ce",
+        "timestamp": 1784378516405
+      },
+      {
+        "executionId": "e12c068e-5a65-4cb8-9a48-f77af72db85a",
+        "chatSessionId": "sess_49fabd88-d053-4349-803a-494a3ef156ce",
+        "timestamp": 1784378571578
+      }
+    ],
+    "12.4 Write property test for Billing/MyChart closed": [
+      {
+        "executionId": "a3e3cdc5-13ad-46f8-94e4-4cd2ae2fc68b",
+        "chatSessionId": "sess_c3205840-887e-4997-86e5-2070ac6b5eea",
+        "timestamp": 1784361564064
+      }
+    ],
+    "13. Implement Scheduling pure logic (visit-type resolution and engine input)": [
+      {
+        "executionId": "66804867-c9b1-4c2f-a1c8-a89175ecdfa5",
+        "chatSessionId": "sess_b4f23b07-7c90-4674-9b93-bc43aef9ccd4",
+        "timestamp": 1784361742086
+      },
+      {
+        "executionId": "66804867-c9b1-4c2f-a1c8-a89175ecdfa5",
+        "chatSessionId": "sess_b4f23b07-7c90-4674-9b93-bc43aef9ccd4",
+        "timestamp": 1784362296805
+      }
+    ],
+    "15.1 Implement the 11 connector tools as workflow tools in `switchboard/tools/`": [
+      {
+        "executionId": "8193f75e-80cc-4252-921c-24e9cc463fa8",
+        "chatSessionId": "sess_ef96b323-e215-4466-89d6-97806c9e01ad",
+        "timestamp": 1784362387792
+      },
+      {
+        "executionId": "8193f75e-80cc-4252-921c-24e9cc463fa8",
+        "chatSessionId": "sess_ef96b323-e215-4466-89d6-97806c9e01ad",
+        "timestamp": 1784364313864
+      }
+    ],
+    "15.2 Wire the `transfer` and `hangup` tools to the telephony providers": [
+      {
+        "executionId": "8193f75e-80cc-4252-921c-24e9cc463fa8",
+        "chatSessionId": "sess_ef96b323-e215-4466-89d6-97806c9e01ad",
+        "timestamp": 1784364318947
+      },
+      {
+        "executionId": "8193f75e-80cc-4252-921c-24e9cc463fa8",
+        "chatSessionId": "sess_ef96b323-e215-4466-89d6-97806c9e01ad",
+        "timestamp": 1784365059682
+      }
+    ],
+    "15. Implement backend connector tools with per-cluster scoping and mocks": [
+      {
+        "executionId": "8193f75e-80cc-4252-921c-24e9cc463fa8",
+        "chatSessionId": "sess_ef96b323-e215-4466-89d6-97806c9e01ad",
+        "timestamp": 1784365059718
+      }
+    ],
+    "1.3 Write unit tests for config loading and config-driven hotword behavior": [
+      {
+        "executionId": "fa7773a2-7085-4c59-bf61-fad324edd84d",
+        "chatSessionId": "sess_aae39954-7979-4628-af39-b6545bea39d1",
+        "timestamp": 1784365120929
+      },
+      {
+        "executionId": "fa7773a2-7085-4c59-bf61-fad324edd84d",
+        "chatSessionId": "sess_aae39954-7979-4628-af39-b6545bea39d1",
+        "timestamp": 1784365227951
+      }
+    ],
+    "2.2 Write property test for the schedule evaluator": [
+      {
+        "executionId": "29f98cfd-f632-4967-a2e4-a10e518f1fd9",
+        "chatSessionId": "sess_a0fec711-5c94-4779-aa56-28bb05be45d8",
+        "timestamp": 1784365251850
+      },
+      {
+        "executionId": "29f98cfd-f632-4967-a2e4-a10e518f1fd9",
+        "chatSessionId": "sess_a0fec711-5c94-4779-aa56-28bb05be45d8",
+        "timestamp": 1784365436374
+      }
+    ],
+    "3.2 Write property test for full-carry ledger": [
+      {
+        "executionId": "a832bef3-e7cc-4867-8b24-8c51c472b807",
+        "chatSessionId": "sess_75724f44-734d-4a9f-8062-86776f3c3884",
+        "timestamp": 1784365455004
+      },
+      {
+        "executionId": "a832bef3-e7cc-4867-8b24-8c51c472b807",
+        "chatSessionId": "sess_75724f44-734d-4a9f-8062-86776f3c3884",
+        "timestamp": 1784365609086
+      }
+    ],
+    "3.3 Write property test for never-re-ask": [
+      {
+        "executionId": "2a313be2-5f11-4834-981c-025489a84f75",
+        "chatSessionId": "sess_5f7482f7-f79e-44bf-a2e6-e9c48678867b",
+        "timestamp": 1784365623536
+      },
+      {
+        "executionId": "2a313be2-5f11-4834-981c-025489a84f75",
+        "chatSessionId": "sess_5f7482f7-f79e-44bf-a2e6-e9c48678867b",
+        "timestamp": 1784366413862
+      }
+    ],
+    "3.4 Write property test for intent vs routing-intent separation": [
+      {
+        "executionId": "c023977c-67b9-4778-b2f3-a60b3a6ec708",
+        "chatSessionId": "sess_d14d3fb7-d3e8-4f02-a114-9f714c27aa7e",
+        "timestamp": 1784366430223
+      },
+      {
+        "executionId": "c023977c-67b9-4778-b2f3-a60b3a6ec708",
+        "chatSessionId": "sess_d14d3fb7-d3e8-4f02-a114-9f714c27aa7e",
+        "timestamp": 1784366572663
+      }
+    ],
+    "4.3 Write property test for render fidelity": [
+      {
+        "executionId": "da81044e-3ad5-4c9d-8cbe-c68e47426e8a",
+        "chatSessionId": "sess_475c28b3-e908-4ad1-8131-abd59e540ad2",
+        "timestamp": 1784366654833
+      },
+      {
+        "executionId": "da81044e-3ad5-4c9d-8cbe-c68e47426e8a",
+        "chatSessionId": "sess_475c28b3-e908-4ad1-8131-abd59e540ad2",
+        "timestamp": 1784366943198
+      }
+    ],
+    "4.4 Write verbatim fidelity example test against Appendix C/E": [
+      {
+        "executionId": "32d59699-8924-4114-9d95-929682ade094",
+        "chatSessionId": "sess_78a7e118-f720-4ec1-8463-557d6a8050f7",
+        "timestamp": 1784366959686
+      },
+      {
+        "executionId": "32d59699-8924-4114-9d95-929682ade094",
+        "chatSessionId": "sess_78a7e118-f720-4ec1-8463-557d6a8050f7",
+        "timestamp": 1784367163040
+      }
+    ],
+    "4.5 Write property test for no internal narration": [
+      {
+        "executionId": "1f655c3d-7644-4ef5-b9dd-d2de3c62986a",
+        "chatSessionId": "sess_d90434e8-8d9e-4e97-af00-d2fca713f967",
+        "timestamp": 1784367178640
+      },
+      {
+        "executionId": "1f655c3d-7644-4ef5-b9dd-d2de3c62986a",
+        "chatSessionId": "sess_d90434e8-8d9e-4e97-af00-d2fca713f967",
+        "timestamp": 1784367375177
+      }
+    ],
+    "4.6 Write property test for medication-name omission": [
+      {
+        "executionId": "44f878c4-6a1b-4625-81c5-e770f1071714",
+        "chatSessionId": "sess_4f5091b2-55cb-46d5-895c-7559f7176316",
+        "timestamp": 1784367393212
+      },
+      {
+        "executionId": "44f878c4-6a1b-4625-81c5-e770f1071714",
+        "chatSessionId": "sess_4f5091b2-55cb-46d5-895c-7559f7176316",
+        "timestamp": 1784367670320
+      }
+    ],
+    "5.2 Write property test for the phone read-back round-trip": [
+      {
+        "executionId": "cfe6b15d-8969-415b-bf55-83f4d19120ec",
+        "chatSessionId": "sess_65972e0a-cf73-43b3-baa3-7e743c0f99b5",
+        "timestamp": 1784367694662
+      },
+      {
+        "executionId": "cfe6b15d-8969-415b-bf55-83f4d19120ec",
+        "chatSessionId": "sess_65972e0a-cf73-43b3-baa3-7e743c0f99b5",
+        "timestamp": 1784367831893
+      }
+    ],
+    "6.2 Write property test for greeting turn-1 post-state": [
+      {
+        "executionId": "04def548-6d3c-4aa6-87aa-5eba2cc8cd42",
+        "chatSessionId": "sess_fa40e88e-9cd3-40f9-b86d-da889eebbfb8",
+        "timestamp": 1784367860453
+      },
+      {
+        "executionId": "04def548-6d3c-4aa6-87aa-5eba2cc8cd42",
+        "chatSessionId": "sess_fa40e88e-9cd3-40f9-b86d-da889eebbfb8",
+        "timestamp": 1784368001497
+      }
+    ],
+    "6.3 Write property test for greeting script selection": [
+      {
+        "executionId": "504e9a85-2211-4df8-beeb-b8e31bfd2143",
+        "chatSessionId": "sess_58a8b389-3e99-4cf9-8125-33e009c89a4f",
+        "timestamp": 1784368075895
+      },
+      {
+        "executionId": "504e9a85-2211-4df8-beeb-b8e31bfd2143",
+        "chatSessionId": "sess_58a8b389-3e99-4cf9-8125-33e009c89a4f",
+        "timestamp": 1784368215279
+      }
+    ],
+    "6.4 Write property test for name-alone insufficiency": [
+      {
+        "executionId": "20cb1e74-6120-4232-b7b6-5d413c7f4015",
+        "chatSessionId": "sess_78d0e8d7-f9b7-4ac0-9ce0-feae97b2fa5d",
+        "timestamp": 1784368231856
+      },
+      {
+        "executionId": "20cb1e74-6120-4232-b7b6-5d413c7f4015",
+        "chatSessionId": "sess_78d0e8d7-f9b7-4ac0-9ce0-feae97b2fa5d",
+        "timestamp": 1784368406707
+      }
+    ],
+    "6.5 Write property test for Path E repeat-then-fallback": [
+      {
+        "executionId": "89c51bdc-3bfd-4243-949f-feeb85ed2294",
+        "chatSessionId": "sess_eedac9a0-edcf-4cdb-b323-09925933be18",
+        "timestamp": 1784368417441
+      },
+      {
+        "executionId": "89c51bdc-3bfd-4243-949f-feeb85ed2294",
+        "chatSessionId": "sess_eedac9a0-edcf-4cdb-b323-09925933be18",
+        "timestamp": 1784368543314
+      }
+    ],
+    "7. Checkpoint - Ensure all pure-logic foundation tests pass": [
+      {
+        "executionId": "93178f5b-680c-45f0-ba3c-0e273a50365d",
+        "chatSessionId": "sess_49cb0146-da0b-4c68-9f78-0a3869cfa353",
+        "timestamp": 1784368560020
+      },
+      {
+        "executionId": "93178f5b-680c-45f0-ba3c-0e273a50365d",
+        "chatSessionId": "sess_49cb0146-da0b-4c68-9f78-0a3869cfa353",
+        "timestamp": 1784368975031
+      }
+    ],
+    "8.2 Write property test for appointment-action classification": [
+      {
+        "executionId": "4ac3f1ee-b12a-4338-b949-56c576ef62a0",
+        "chatSessionId": "sess_17e28692-3502-4e6c-9801-191c38976b27",
+        "timestamp": 1784369094385
+      },
+      {
+        "executionId": "4ac3f1ee-b12a-4338-b949-56c576ef62a0",
+        "chatSessionId": "sess_17e28692-3502-4e6c-9801-191c38976b27",
+        "timestamp": 1784369278824
+      }
+    ],
+    "8.4 Write property test for lookup-speech prefix rules": [
+      {
+        "executionId": "a0a9b84b-769c-443f-be67-161af2e8f147",
+        "chatSessionId": "sess_0f373417-9851-4a70-b473-eb7140952e9d",
+        "timestamp": 1784369318976
+      },
+      {
+        "executionId": "a0a9b84b-769c-443f-be67-161af2e8f147",
+        "chatSessionId": "sess_0f373417-9851-4a70-b473-eb7140952e9d",
+        "timestamp": 1784369452365
+      }
+    ],
+    "8.6 Write property test for manage-action consequences": [
+      {
+        "executionId": "8568c46b-981d-46e0-832c-0689c90bf404",
+        "chatSessionId": "sess_93ac6f6c-60b5-43c5-b3e6-0fe0bca45cfa",
+        "timestamp": 1784369474607
+      },
+      {
+        "executionId": "8568c46b-981d-46e0-832c-0689c90bf404",
+        "chatSessionId": "sess_93ac6f6c-60b5-43c5-b3e6-0fe0bca45cfa",
+        "timestamp": 1784369647486
+      }
+    ],
+    "9.2 Write property test for the authentication gate": [
+      {
+        "executionId": "a3837087-0f7f-4a54-8290-dd465d61ee36",
+        "chatSessionId": "sess_b77629ec-c529-4d69-a701-9e1986c2faba",
+        "timestamp": 1784369682958
+      },
+      {
+        "executionId": "a3837087-0f7f-4a54-8290-dd465d61ee36",
+        "chatSessionId": "sess_b77629ec-c529-4d69-a701-9e1986c2faba",
+        "timestamp": 1784372752650
+      }
+    ],
+    "9.4 Write property test for ANI non-repeat in Authentication": [
+      {
+        "executionId": "9b5db146-c24f-4fe7-9204-dd157fb65785",
+        "chatSessionId": "sess_2f67c3c4-69bf-4130-ac91-d8726038057f",
+        "timestamp": 1784372776423
+      },
+      {
+        "executionId": "9b5db146-c24f-4fe7-9204-dd157fb65785",
+        "chatSessionId": "sess_2f67c3c4-69bf-4130-ac91-d8726038057f",
+        "timestamp": 1784372900476
+      }
+    ],
+    "9.5 Write property test for fail/refusal-still-connects": [
+      {
+        "executionId": "9ea9e2fd-be37-43f5-be9c-6eeee10c7186",
+        "chatSessionId": "sess_51708f60-e758-4331-a4a6-db0d7688201e",
+        "timestamp": 1784372915854
+      },
+      {
+        "executionId": "9ea9e2fd-be37-43f5-be9c-6eeee10c7186",
+        "chatSessionId": "sess_51708f60-e758-4331-a4a6-db0d7688201e",
+        "timestamp": 1784373125757
+      }
+    ],
+    "9.6 Write property test for changed-request return": [
+      {
+        "executionId": "dc3a5965-7c5a-4ebb-a316-1d539ffed0e1",
+        "chatSessionId": "sess_71e3d0a0-025e-4da3-9b8b-79a8ba8825ce",
+        "timestamp": 1784373140285
+      },
+      {
+        "executionId": "dc3a5965-7c5a-4ebb-a316-1d539ffed0e1",
+        "chatSessionId": "sess_71e3d0a0-025e-4da3-9b8b-79a8ba8825ce",
+        "timestamp": 1784373247497
+      }
+    ],
+    "9.7 Write property test for DOB-determined verification": [
+      {
+        "executionId": "acecfe16-4c3f-4da0-826d-8b19dafadb7b",
+        "chatSessionId": "sess_d23e945b-3c8f-45e8-88c9-175b81ccab8a",
+        "timestamp": 1784373262095
+      },
+      {
+        "executionId": "acecfe16-4c3f-4da0-826d-8b19dafadb7b",
+        "chatSessionId": "sess_d23e945b-3c8f-45e8-88c9-175b81ccab8a",
+        "timestamp": 1784373421899
+      }
+    ],
+    "10. Checkpoint - Ensure Business Hours and Authentication logic tests pass": [
+      {
+        "executionId": "3dc37070-af52-427f-b677-fd8625d89787",
+        "chatSessionId": "sess_5c6801a9-fa5c-46ca-8ad4-ec1aee9c034d",
+        "timestamp": 1784373438567
+      },
+      {
+        "executionId": "3dc37070-af52-427f-b677-fd8625d89787",
+        "chatSessionId": "sess_5c6801a9-fa5c-46ca-8ad4-ec1aee9c034d",
+        "timestamp": 1784373488216
+      }
+    ],
+    "11.5 Write property test for terminal-turn line-only": [
+      {
+        "executionId": "641ce13e-833a-45d1-876c-59f7a394410c",
+        "chatSessionId": "sess_fc7418af-b3e1-4d24-a7e1-2aa578de3733",
+        "timestamp": 1784377869343
+      },
+      {
+        "executionId": "641ce13e-833a-45d1-876c-59f7a394410c",
+        "chatSessionId": "sess_fc7418af-b3e1-4d24-a7e1-2aa578de3733",
+        "timestamp": 1784378037811
+      }
+    ],
+    "11.6 Write property test for after-hours routing-mode gating": [
+      {
+        "executionId": "d472557e-6f59-406a-9e7a-e62b16585faf",
+        "chatSessionId": "sess_792dc438-08de-4d5a-a7d3-b1acdace76fe",
+        "timestamp": 1784378052720
+      },
+      {
+        "executionId": "d472557e-6f59-406a-9e7a-e62b16585faf",
+        "chatSessionId": "sess_792dc438-08de-4d5a-a7d3-b1acdace76fe",
+        "timestamp": 1784378157224
+      }
+    ],
+    "11.7 Write property test for lab-results routing": [
+      {
+        "executionId": "71f1c44a-11c2-448f-bf5d-7d74f54cc8f4",
+        "chatSessionId": "sess_66b2426f-d3b2-46fc-86fd-15c13dcc599c",
+        "timestamp": 1784378170854
+      },
+      {
+        "executionId": "71f1c44a-11c2-448f-bf5d-7d74f54cc8f4",
+        "chatSessionId": "sess_66b2426f-d3b2-46fc-86fd-15c13dcc599c",
+        "timestamp": 1784378290007
+      }
+    ],
+    "11.8 Write property test for new-patient create routing": [
+      {
+        "executionId": "0f520ea1-333d-49fb-9895-e2a9308a933a",
+        "chatSessionId": "sess_3731df80-0c50-4b30-af27-bc98147e87e2",
+        "timestamp": 1784378310212
+      },
+      {
+        "executionId": "0f520ea1-333d-49fb-9895-e2a9308a933a",
+        "chatSessionId": "sess_3731df80-0c50-4b30-af27-bc98147e87e2",
+        "timestamp": 1784378430516
+      }
+    ],
+    "11.3 Write property test for the sequential exact-string chain": [
+      {
+        "executionId": "0470dcb3-ba6a-447a-a487-d30a8a95a76f",
+        "chatSessionId": "sess_72078b9f-5955-4fc6-a28c-d128032447d7",
+        "timestamp": 1784378602147
+      },
+      {
+        "executionId": "0470dcb3-ba6a-447a-a487-d30a8a95a76f",
+        "chatSessionId": "sess_72078b9f-5955-4fc6-a28c-d128032447d7",
+        "timestamp": 1784378807590
+      }
+    ],
+    "11.2 Write property test for zero-speech resolution": [
+      {
+        "executionId": "4820dda3-81bb-4ca0-b319-f858402585f2",
+        "chatSessionId": "sess_2344975e-028a-47bb-9f29-7ed71c076552",
+        "timestamp": 1784378823766
+      },
+      {
+        "executionId": "4820dda3-81bb-4ca0-b319-f858402585f2",
+        "chatSessionId": "sess_2344975e-028a-47bb-9f29-7ed71c076552",
+        "timestamp": 1784378952180
+      }
+    ],
+    "13.1 Implement visit-type resolver, never-set guard, and engine-input completeness in `scheduling.py`": [
+      {
+        "executionId": "5e575319-1437-4afb-b7f5-93230479cbbe",
+        "chatSessionId": "sess_79c78b28-18b4-4f56-9fa5-08055d86297d",
+        "timestamp": 1784378966971
+      },
+      {
+        "executionId": "5e575319-1437-4afb-b7f5-93230479cbbe",
+        "chatSessionId": "sess_79c78b28-18b4-4f56-9fa5-08055d86297d",
+        "timestamp": 1784379092699
+      }
+    ],
+    "13.2 Write property test for visit-type resolution/disambiguation": [
+      {
+        "executionId": "c94e39c3-f3dd-4f20-9a8e-c37327eb845f",
+        "chatSessionId": "sess_6a712a8e-c3ba-4769-bf84-dba4b8b92d4d",
+        "timestamp": 1784379108192
+      },
+      {
+        "executionId": "c94e39c3-f3dd-4f20-9a8e-c37327eb845f",
+        "chatSessionId": "sess_6a712a8e-c3ba-4769-bf84-dba4b8b92d4d",
+        "timestamp": 1784379236737
+      }
+    ],
+    "13.3 Write property test for switchboard never setting visit type": [
+      {
+        "executionId": "c5bf79ac-d57a-42f8-832e-d8cefa63b041",
+        "chatSessionId": "sess_3020434f-115a-4fe9-803d-9de63d1edb35",
+        "timestamp": 1784379252813
+      },
+      {
+        "executionId": "c5bf79ac-d57a-42f8-832e-d8cefa63b041",
+        "chatSessionId": "sess_3020434f-115a-4fe9-803d-9de63d1edb35",
+        "timestamp": 1784379378435
+      }
+    ],
+    "13.4 Write property test for scheduling-engine input completeness": [
+      {
+        "executionId": "ee4dbba5-91fd-4abf-8295-d82d5f4e438e",
+        "chatSessionId": "sess_3f2e0bb8-991f-4f23-966f-bdd372ba83f7",
+        "timestamp": 1784379394291
+      },
+      {
+        "executionId": "ee4dbba5-91fd-4abf-8295-d82d5f4e438e",
+        "chatSessionId": "sess_3f2e0bb8-991f-4f23-966f-bdd372ba83f7",
+        "timestamp": 1784379565182
+      }
+    ],
+    "14. Checkpoint - Ensure Routing, After Hours, and Scheduling logic tests pass": [
+      {
+        "executionId": "0a88aa82-31a5-4b9b-92f5-84b5f982ee0b",
+        "chatSessionId": "sess_df93eb96-64bd-42e7-86c1-ecb36f1b4e7f",
+        "timestamp": 1784379576924
+      },
+      {
+        "executionId": "0a88aa82-31a5-4b9b-92f5-84b5f982ee0b",
+        "chatSessionId": "sess_df93eb96-64bd-42e7-86c1-ecb36f1b4e7f",
+        "timestamp": 1784379734207
+      }
+    ],
+    "15.3 Write integration tests (1–3) for telephony transfer/hangup wiring": [
+      {
+        "executionId": "19aee6a1-1b6c-4713-afbd-7cf1bfa974a9",
+        "chatSessionId": "sess_c356a08b-b2ec-499c-8116-a036fc9159b4",
+        "timestamp": 1784379749965
+      },
+      {
+        "executionId": "19aee6a1-1b6c-4713-afbd-7cf1bfa974a9",
+        "chatSessionId": "sess_c356a08b-b2ec-499c-8116-a036fc9159b4",
+        "timestamp": 1784379821105
+      }
+    ],
+    "15.4 Write integration tests (1–3) for the mocked SpinSci connector contracts": [
+      {
+        "executionId": "c6c2ef83-c64d-49b1-939f-39dc92e3ca34",
+        "chatSessionId": "sess_8d187c18-5c7f-4feb-9270-f679354f6bec",
+        "timestamp": 1784379837267
+      },
+      {
+        "executionId": "c6c2ef83-c64d-49b1-939f-39dc92e3ca34",
+        "chatSessionId": "sess_8d187c18-5c7f-4feb-9270-f679354f6bec",
+        "timestamp": 1784379963748
+      }
+    ],
+    "16.1 Build the Greeting cluster (nodes + edges)": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029634
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380063939
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380697741
+      }
+    ],
+    "16.2 Build the Business Hours cluster (nodes + edges)": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029673
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380064756
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380698239
+      }
+    ],
+    "16.3 Build the After Hours cluster (nodes + edges)": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029704
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380065775
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380699131
+      }
+    ],
+    "16.4 Build the Authentication cluster (nodes + edges)": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029732
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380066494
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380699855
+      }
+    ],
+    "16.5 Build the Routing cluster (nodes + edges)": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029764
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380067344
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380700712
+      }
+    ],
+    "16.6 Implement the silent-transition classifier (`transitions.py`) and apply to silent edges": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029794
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380711963
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380936111
+      }
+    ],
+    "16.7 Write property test for the silent-transition invariant": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029824
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380942205
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784381226037
+      }
+    ],
+    "16.8 Apply per-cluster tool scoping (gate-by-scoping)": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029862
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380943014
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784381226798
+      }
+    ],
+    "16.9 Add the global-node persona and TTS rules": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029896
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380943853
+      },
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784381227809
+      }
+    ],
+    "17.1 Build Scheduling Init + Scheduling Engine downstream node segments": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029928
+      },
+      {
+        "executionId": "3419e97a-b8a8-4123-8eb7-aa1382388372",
+        "chatSessionId": "sess_e77dcc38-4fd1-4686-974e-318a6f2d306d",
+        "timestamp": 1784381394859
+      },
+      {
+        "executionId": "3419e97a-b8a8-4123-8eb7-aa1382388372",
+        "chatSessionId": "sess_e77dcc38-4fd1-4686-974e-318a6f2d306d",
+        "timestamp": 1784381645120
+      }
+    ],
+    "18.1 Assemble the complete graph from all clusters in `switchboard/graph.py`": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029957
+      },
+      {
+        "executionId": "f60cfbef-8b8d-4a3c-aa2a-1cb76fb96267",
+        "chatSessionId": "sess_c57254bd-5555-4cf8-bcbc-1118d5177337",
+        "timestamp": 1784381903671
+      },
+      {
+        "executionId": "f60cfbef-8b8d-4a3c-aa2a-1cb76fb96267",
+        "chatSessionId": "sess_c57254bd-5555-4cf8-bcbc-1118d5177337",
+        "timestamp": 1784382293258
+      }
+    ],
+    "18.2 Write a `WorkflowGraph` validation smoke test": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380029988
+      },
+      {
+        "executionId": "f60cfbef-8b8d-4a3c-aa2a-1cb76fb96267",
+        "chatSessionId": "sess_c57254bd-5555-4cf8-bcbc-1118d5177337",
+        "timestamp": 1784382298294
+      },
+      {
+        "executionId": "f60cfbef-8b8d-4a3c-aa2a-1cb76fb96267",
+        "chatSessionId": "sess_c57254bd-5555-4cf8-bcbc-1118d5177337",
+        "timestamp": 1784382426494
+      }
+    ],
+    "19. Checkpoint - Ensure the graph builds, validates, and all tests pass": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380030025
+      },
+      {
+        "executionId": "ab56012b-1586-4947-8f02-0f8286ab9fc6",
+        "chatSessionId": "sess_57bb16e8-a839-4c3f-8b59-30f4597dcd74",
+        "timestamp": 1784432392704
+      },
+      {
+        "executionId": "ab56012b-1586-4947-8f02-0f8286ab9fc6",
+        "chatSessionId": "sess_57bb16e8-a839-4c3f-8b59-30f4597dcd74",
+        "timestamp": 1784432456234
+      }
+    ],
+    "21. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784380030056
+      },
+      {
+        "executionId": "416ef2da-734b-4e7a-b7dc-eb0ea09e4b75",
+        "chatSessionId": "sess_9d88fa8b-45b7-4238-a7e4-b282bd84caf2",
+        "timestamp": 1784437472369
+      },
+      {
+        "executionId": "416ef2da-734b-4e7a-b7dc-eb0ea09e4b75",
+        "chatSessionId": "sess_9d88fa8b-45b7-4238-a7e4-b282bd84caf2",
+        "timestamp": 1784437715117
+      }
+    ],
+    "16. Build the five phase node clusters and wire pure logic into the graph": [
+      {
+        "executionId": "1a0da74c-55e2-4a5b-beed-9a759925ae4a",
+        "chatSessionId": "sess_cc63cea9-3067-4e50-8ace-cb6a1cf379f6",
+        "timestamp": 1784381227845
+      }
+    ],
+    "17.2 Write integration tests (1–3) for the mocked Scheduling Engine contracts": [
+      {
+        "executionId": "3419e97a-b8a8-4123-8eb7-aa1382388372",
+        "chatSessionId": "sess_e77dcc38-4fd1-4686-974e-318a6f2d306d",
+        "timestamp": 1784381650439
+      },
+      {
+        "executionId": "3419e97a-b8a8-4123-8eb7-aa1382388372",
+        "chatSessionId": "sess_e77dcc38-4fd1-4686-974e-318a6f2d306d",
+        "timestamp": 1784381753470
+      }
+    ],
+    "17. Build the Scheduling Init and Scheduling Engine downstream segments": [
+      {
+        "executionId": "3419e97a-b8a8-4123-8eb7-aa1382388372",
+        "chatSessionId": "sess_e77dcc38-4fd1-4686-974e-318a6f2d306d",
+        "timestamp": 1784381753508
+      }
+    ],
+    "18. Assemble the full switchboard graph and validate it": [
+      {
+        "executionId": "f60cfbef-8b8d-4a3c-aa2a-1cb76fb96267",
+        "chatSessionId": "sess_c57254bd-5555-4cf8-bcbc-1118d5177337",
+        "timestamp": 1784382426544
+      }
+    ],
+    "20. Write the PoC acceptance-scenario end-to-end tests (POC-01..16)": [
+      {
+        "executionId": "93853ccb-352d-4341-92b5-d03c73d6b708",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432491270
+      },
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432782486
+      },
+      {
+        "executionId": "a5877822-9adb-4002-8fb7-9e1da35dee2a",
+        "chatSessionId": "sess_513b85bb-8ba4-4630-8be6-24d1eb5cdffc",
+        "timestamp": 1784437318357
+      }
+    ],
+    "20.1 E2E: existing wellness/sick and new-patient create (POC-01/01b/01c)": [
+      {
+        "executionId": "93853ccb-352d-4341-92b5-d03c73d6b708",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432557325
+      },
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432788974
+      },
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784433073640
+      }
+    ],
+    "20.2 E2E: Records in hours (POC-02)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432789743
+      },
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784433192388
+      }
+    ],
+    "20.3 E2E: after-hours restricted service, agree to connect (POC-03)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432790609
+      },
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784433193398
+      }
+    ],
+    "20.4 E2E: after-hours hotword (POC-04)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432791298
+      },
+      {
+        "executionId": "46dd161c-9434-4fdd-a856-fa62f19c7bb4",
+        "chatSessionId": "sess_3673cd15-0119-4d92-8b85-1f0b78d328e3",
+        "timestamp": 1784433824233
+      },
+      {
+        "executionId": "46dd161c-9434-4fdd-a856-fa62f19c7bb4",
+        "chatSessionId": "sess_3673cd15-0119-4d92-8b85-1f0b78d328e3",
+        "timestamp": 1784434025257
+      }
+    ],
+    "20.5 E2E: zero speech between auth completion and transfer (POC-05)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432792125
+      },
+      {
+        "executionId": "f30ce46f-f7cf-4efa-a88d-d8fdf3abd017",
+        "chatSessionId": "sess_5cfe6be6-d43b-4d8e-97ba-afe33bc85304",
+        "timestamp": 1784434066279
+      },
+      {
+        "executionId": "f30ce46f-f7cf-4efa-a88d-d8fdf3abd017",
+        "chatSessionId": "sess_5cfe6be6-d43b-4d8e-97ba-afe33bc85304",
+        "timestamp": 1784434304949
+      }
+    ],
+    "20.6 E2E: auth refusal still connects (POC-06)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432795758
+      },
+      {
+        "executionId": "1428a892-e6d0-42ce-bf5e-c80b5c05f165",
+        "chatSessionId": "sess_a6bac8bb-b112-4317-9674-235282cad6b2",
+        "timestamp": 1784434743888
+      },
+      {
+        "executionId": "1428a892-e6d0-42ce-bf5e-c80b5c05f165",
+        "chatSessionId": "sess_a6bac8bb-b112-4317-9674-235282cad6b2",
+        "timestamp": 1784434802089
+      }
+    ],
+    "20.7 E2E: cold start silent turn 1, welcome audio, branch turn 2 (POC-07)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432796606
+      },
+      {
+        "executionId": "68d3b2eb-053b-4291-b3c1-776db781e991",
+        "chatSessionId": "sess_36c28ac2-5912-4e7c-a149-214e13a826c7",
+        "timestamp": 1784434834029
+      },
+      {
+        "executionId": "68d3b2eb-053b-4291-b3c1-776db781e991",
+        "chatSessionId": "sess_36c28ac2-5912-4e7c-a149-214e13a826c7",
+        "timestamp": 1784434878078
+      }
+    ],
+    "20.8 E2E: two retries then silent route (POC-08)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432797378
+      },
+      {
+        "executionId": "7ce9b5c4-349c-4258-a879-4bb362d8de50",
+        "chatSessionId": "sess_e48cfc2a-165a-43ef-ae9a-3d2d08213afc",
+        "timestamp": 1784434907518
+      },
+      {
+        "executionId": "7ce9b5c4-349c-4258-a879-4bb362d8de50",
+        "chatSessionId": "sess_e48cfc2a-165a-43ef-ae9a-3d2d08213afc",
+        "timestamp": 1784435295070
+      }
+    ],
+    "20.9 E2E: changed request during auth (POC-09)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432798308
+      },
+      {
+        "executionId": "b84b8a7a-acbf-4ffb-ace4-e7ee3efcdeb9",
+        "chatSessionId": "sess_75c06853-1e62-44bd-8bdf-7a8f7364fedd",
+        "timestamp": 1784435363769
+      },
+      {
+        "executionId": "b84b8a7a-acbf-4ffb-ace4-e7ee3efcdeb9",
+        "chatSessionId": "sess_75c06853-1e62-44bd-8bdf-7a8f7364fedd",
+        "timestamp": 1784435557011
+      }
+    ],
+    "20.10 E2E: auth gate locks transfer/metadata until verify (POC-10)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432799103
+      },
+      {
+        "executionId": "614d029a-c18f-4df2-bbe5-1ac29efcd32f",
+        "chatSessionId": "sess_e86fd3a2-ab1d-47c5-8746-97f8a1dc001e",
+        "timestamp": 1784435573583
+      },
+      {
+        "executionId": "614d029a-c18f-4df2-bbe5-1ac29efcd32f",
+        "chatSessionId": "sess_e86fd3a2-ab1d-47c5-8746-97f8a1dc001e",
+        "timestamp": 1784435911017
+      }
+    ],
+    "20.11 E2E: existing-patient reschedule (POC-11)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432802542
+      },
+      {
+        "executionId": "c5ace1ea-a8d2-45bd-a5bc-b6ea911059b9",
+        "chatSessionId": "sess_60379169-c50a-453c-91a1-7faf95469967",
+        "timestamp": 1784435952856
+      },
+      {
+        "executionId": "c5ace1ea-a8d2-45bd-a5bc-b6ea911059b9",
+        "chatSessionId": "sess_60379169-c50a-453c-91a1-7faf95469967",
+        "timestamp": 1784436181760
+      }
+    ],
+    "20.12 E2E: wellness-vs-sick disambiguation (POC-12)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432803283
+      },
+      {
+        "executionId": "2b9e96f1-fdd4-4992-8609-edd699b8f2b0",
+        "chatSessionId": "sess_58cfff56-78ce-4258-8a4d-225f1b51441a",
+        "timestamp": 1784436242780
+      },
+      {
+        "executionId": "2b9e96f1-fdd4-4992-8609-edd699b8f2b0",
+        "chatSessionId": "sess_58cfff56-78ce-4258-8a4d-225f1b51441a",
+        "timestamp": 1784436429434
+      }
+    ],
+    "20.13 E2E: preferred provider unavailable, alternative without re-ask (POC-13)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432804164
+      },
+      {
+        "executionId": "882867eb-b961-4e52-8dab-f02eef0f989b",
+        "chatSessionId": "sess_9f4a2094-f067-44ca-8476-385d6a079009",
+        "timestamp": 1784436510699
+      },
+      {
+        "executionId": "882867eb-b961-4e52-8dab-f02eef0f989b",
+        "chatSessionId": "sess_9f4a2094-f067-44ca-8476-385d6a079009",
+        "timestamp": 1784436813959
+      }
+    ],
+    "20.14 E2E: cancel/list/confirm (POC-14/15/16)": [
+      {
+        "executionId": "41c59941-6e23-4502-a8c7-ddb3d4297fa0",
+        "chatSessionId": "sess_e6ac380f-2664-4e77-85a4-0224b3007dc1",
+        "timestamp": 1784432805004
+      },
+      {
+        "executionId": "a5877822-9adb-4002-8fb7-9e1da35dee2a",
+        "chatSessionId": "sess_513b85bb-8ba4-4630-8be6-24d1eb5cdffc",
+        "timestamp": 1784436856811
+      },
+      {
+        "executionId": "a5877822-9adb-4002-8fb7-9e1da35dee2a",
+        "chatSessionId": "sess_513b85bb-8ba4-4630-8be6-24d1eb5cdffc",
+        "timestamp": 1784437318258
+      }
+    ]
+  }
+}

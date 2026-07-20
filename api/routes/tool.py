@@ -1,6 +1,7 @@
 """API routes for managing tools."""
 
 import asyncio
+import copy
 import re
 from datetime import datetime
 from typing import Annotated, Any, Dict, List, Literal, Optional, Union
@@ -15,6 +16,9 @@ from api.enums import PostHogEvent, ToolCategory, ToolStatus
 from api.sdk_expose import sdk_expose
 from api.services.auth.depends import get_user
 from api.services.posthog_client import capture_event
+from api.services.switchboard.enablement.masking import (
+    mask_connector_tool_definition,
+)
 from api.services.workflow.mcp_tool_session import discover_mcp_tools
 from api.services.workflow.tools.mcp_tool import (
     McpDefinitionError,
@@ -238,6 +242,27 @@ class UpdateToolRequest(BaseModel):
     status: Optional[str] = None
 
 
+class UpdateToolBindingRequest(BaseModel):
+    """Request schema for setting a connector tool's Tool_Binding.
+
+    Mirrors the ``ConnectorBinding`` seam (endpoint URL, credential reference,
+    field mapping) that ``ConnectorTool.to_tool_definition()`` stores under
+    ``definition.config`` (Design "Tool_Binding_Editor + binding persistence").
+    """
+
+    url: str = Field(
+        default="", description="Endpoint URL the connector tool should call"
+    )
+    credential_uuid: Optional[str] = Field(
+        default=None,
+        description="Reference to an organization-scoped credential; never a raw secret value",
+    )
+    field_mapping: Dict[str, str] = Field(
+        default_factory=dict,
+        description="Mapping from switchboard-side field names to the backend's field names",
+    )
+
+
 class CreatedByResponse(BaseModel):
     """Response schema for the user who created a tool."""
 
@@ -282,6 +307,10 @@ def build_tool_response(tool, include_created_by: bool = False) -> ToolResponse:
             provider_id=tool.created_by_user.provider_id,
         )
 
+    definition = tool.definition
+    if definition and definition.get("switchboard"):
+        definition = mask_connector_tool_definition(definition)
+
     return ToolResponse(
         id=tool.id,
         tool_uuid=tool.tool_uuid,
@@ -291,7 +320,7 @@ def build_tool_response(tool, include_created_by: bool = False) -> ToolResponse:
         icon=tool.icon,
         icon_color=tool.icon_color,
         status=tool.status,
-        definition=tool.definition,
+        definition=definition,
         created_at=tool.created_at,
         updated_at=tool.updated_at,
         created_by=created_by,
@@ -595,6 +624,78 @@ async def update_tool(
         raise HTTPException(status_code=404, detail="Tool not found")
 
     return build_tool_response(tool, include_created_by=True)
+
+
+@router.put("/{tool_uuid}/binding")
+async def update_tool_binding(
+    tool_uuid: str,
+    request: UpdateToolBindingRequest,
+    user: UserModel = Depends(get_user),
+) -> ToolResponse:
+    """
+    Set a connector tool's Tool_Binding (endpoint URL, credential reference,
+    field mapping).
+
+    Persists onto the org-scoped tool's ``definition.config`` — the same
+    shape ``ConnectorTool.to_tool_definition()`` produces — without touching
+    the tool's ``switchboard.*`` scoping/sensitive-field metadata or any other
+    ``config.*`` keys (e.g. ``parameters``, ``timeout_ms``) (Req 6.1, 6.4, 6.5).
+
+    Args:
+        tool_uuid: The UUID of the tool to bind
+        request: The endpoint URL, credential reference, and field mapping
+
+    Returns:
+        The updated tool, with sensitive fields masked in the response
+
+    Raises:
+        HTTPException 404: The tool does not exist for the caller's
+            organization, or ``credential_uuid`` is set but does not resolve
+            to a credential belonging to the caller's organization
+            (Req 6.2, 13.3, 13.4).
+    """
+    if not user.selected_organization_id:
+        raise HTTPException(
+            status_code=400, detail="No organization selected for the user"
+        )
+
+    organization_id = user.selected_organization_id
+
+    tool = await db_client.get_tool_by_uuid(
+        tool_uuid, organization_id, include_archived=True
+    )
+    if not tool:
+        raise HTTPException(status_code=404, detail="Tool not found")
+
+    if request.credential_uuid:
+        credential = await db_client.get_credential_by_uuid(
+            request.credential_uuid, organization_id
+        )
+        if not credential:
+            raise HTTPException(status_code=404, detail="Credential not found")
+
+    # Deep-copy the existing definition and merge only the binding fields into
+    # config, preserving switchboard.* and every other config.* key untouched
+    # (e.g. parameters, timeout_ms) rather than overwriting the definition
+    # wholesale.
+    merged_definition = copy.deepcopy(tool.definition or {})
+    merged_definition["config"] = {
+        **merged_definition.get("config", {}),
+        "url": request.url,
+        "credential_uuid": request.credential_uuid,
+        "field_mapping": request.field_mapping,
+    }
+
+    updated_tool = await db_client.update_tool(
+        tool_uuid=tool_uuid,
+        organization_id=organization_id,
+        definition=merged_definition,
+    )
+
+    if not updated_tool:
+        raise HTTPException(status_code=404, detail="Tool not found")
+
+    return build_tool_response(updated_tool, include_created_by=True)
 
 
 @router.delete("/{tool_uuid}")

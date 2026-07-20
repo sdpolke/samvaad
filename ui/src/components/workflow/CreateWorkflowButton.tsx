@@ -1,6 +1,6 @@
 'use client';
 
-import { Bot, ChevronDown, LayoutTemplate, PlusIcon } from 'lucide-react';
+import { Bot, ChevronDown, FileStack, LayoutTemplate, PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -16,6 +16,8 @@ import {
 import { useAuth } from '@/lib/auth';
 import logger from '@/lib/logger';
 import { getRandomId } from '@/lib/utils';
+
+import { CreateFromTemplateDialog } from './CreateFromTemplateDialog';
 
 const BLANK_WORKFLOW_DEFINITION = {
     nodes: [
@@ -48,6 +50,7 @@ export function CreateWorkflowButton() {
     const router = useRouter();
     const { user, getAccessToken } = useAuth();
     const [isCreating, setIsCreating] = useState(false);
+    const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
 
     const handleAgentBuilder = () => {
         router.push('/workflow/create');
@@ -82,30 +85,44 @@ export function CreateWorkflowButton() {
     };
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button disabled={isCreating}>
-                    <PlusIcon className="w-4 h-4" />
-                    {isCreating ? 'Creating...' : 'Create Agent'}
-                    <ChevronDown className="w-4 h-4" />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleAgentBuilder} className="cursor-pointer">
-                    <Bot className="w-4 h-4 mr-2" />
-                    <div>
-                        <div className="font-medium">Use Agent Builder</div>
-                        <div className="text-xs text-muted-foreground">AI generates a workflow from your description</div>
-                    </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleBlankCanvas} disabled={isCreating} className="cursor-pointer">
-                    <LayoutTemplate className="w-4 h-4 mr-2" />
-                    <div>
-                        <div className="font-medium">Blank Canvas</div>
-                        <div className="text-xs text-muted-foreground">Start from scratch with an empty workflow</div>
-                    </div>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button disabled={isCreating}>
+                        <PlusIcon className="w-4 h-4" />
+                        {isCreating ? 'Creating...' : 'Create Agent'}
+                        <ChevronDown className="w-4 h-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={handleAgentBuilder} className="cursor-pointer">
+                        <Bot className="w-4 h-4 mr-2" />
+                        <div>
+                            <div className="font-medium">Use Agent Builder</div>
+                            <div className="text-xs text-muted-foreground">AI generates a workflow from your description</div>
+                        </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleBlankCanvas} disabled={isCreating} className="cursor-pointer">
+                        <LayoutTemplate className="w-4 h-4 mr-2" />
+                        <div>
+                            <div className="font-medium">Blank Canvas</div>
+                            <div className="text-xs text-muted-foreground">Start from scratch with an empty workflow</div>
+                        </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTemplateDialogOpen(true)} className="cursor-pointer">
+                        <FileStack className="w-4 h-4 mr-2" />
+                        <div>
+                            <div className="font-medium">From Template</div>
+                            <div className="text-xs text-muted-foreground">Create a workflow from a pre-built template</div>
+                        </div>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <CreateFromTemplateDialog
+                open={templateDialogOpen}
+                onOpenChange={setTemplateDialogOpen}
+            />
+        </>
     );
 }

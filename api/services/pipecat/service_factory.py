@@ -26,7 +26,9 @@ from pipecat.services.dograh.tts import DograhTTSService, DograhTTSSettings
 from pipecat.services.elevenlabs.tts import ElevenLabsTTSService, ElevenLabsTTSSettings
 from pipecat.services.gladia.stt import GladiaSTTService, GladiaSTTSettings
 from pipecat.services.google.llm import GoogleLLMService, GoogleLLMSettings
-from pipecat.services.groq.llm import GroqLLMService, GroqLLMSettings
+from pipecat.services.groq.llm import GroqLLMSettings
+
+from api.services.pipecat.groq_retry_llm import RetryingGroqLLMService
 from pipecat.services.openai.base_llm import OpenAILLMSettings
 from pipecat.services.openai.llm import OpenAILLMService
 from pipecat.services.openai.stt import (
@@ -447,7 +449,7 @@ def create_llm_service_from_provider(
             settings=OpenAILLMSettings(model=model, temperature=0.1),
         )
     elif provider == ServiceProviders.GROQ.value:
-        return GroqLLMService(
+        return RetryingGroqLLMService(
             api_key=api_key,
             settings=GroqLLMSettings(model=model, temperature=0.1),
         )

@@ -1,0 +1,933 @@
+{
+  "pbtResults": {
+    "2.3 Write property test for template registration idempotence": {
+      "status": "passed",
+      "lastRunTimestamp": 1784459053851
+    },
+    "3.2 Write property test for connector-tool provisioning fidelity and idempotence": {
+      "status": "passed",
+      "lastRunTimestamp": 1784459063279
+    },
+    "2.2 Write property test for template serialization round-trip": {
+      "status": "passed",
+      "lastRunTimestamp": 1784459117599
+    },
+    "4.2 Write property test for tool-reference reconciliation completeness": {
+      "status": "passed",
+      "lastRunTimestamp": 1784459302149
+    },
+    "5.2 Write property test for the gate-by-scoping invariant": {
+      "status": "passed",
+      "lastRunTimestamp": 1784459396749
+    },
+    "8.2 Write property test for empty hotword list matches nothing": {
+      "status": "passed",
+      "lastRunTimestamp": 1784464809431
+    },
+    "6.2 Write property test for sensitive-field masking": {
+      "status": "passed",
+      "lastRunTimestamp": 1784464870246
+    },
+    "9.3 Write property test for the tenant-isolation invariant": {
+      "status": "passed",
+      "lastRunTimestamp": 1784466997795
+    },
+    "9.2 Write property test for trigger identifier freshness": {
+      "status": "passed",
+      "lastRunTimestamp": 1784467484629
+    },
+    "9.4 Write property test for instantiation atomic rollback": {
+      "status": "passed",
+      "lastRunTimestamp": 1784467988703
+    },
+    "11.2 Write property test for speech and prompt preservation": {
+      "status": "passed",
+      "lastRunTimestamp": 1784468293632
+    }
+  },
+  "executionHistory": {
+    "1.1 Add `build_switchboard_reactflow_dto()` and enablement package stubs": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228461
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456240291
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456384765
+      }
+    ],
+    "1.2 Write unit test for the serialization seam": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228492
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784458617001
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459147231
+      }
+    ],
+    "2.1 Implement `serialize.py` and `registrar.py`": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228521
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456464242
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784457002319
+      }
+    ],
+    "2.2 Write property test for template serialization round-trip": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228559
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784458617968
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459145311
+      }
+    ],
+    "2.3 Write property test for template registration idempotence": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228587
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784458618968
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459147445
+      }
+    ],
+    "2.4 Write unit/edge tests for registrar create/update/abort paths": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228619
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784458619992
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459144320
+      }
+    ],
+    "3.1 Implement `provisioner.py`": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228649
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456464901
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784457003365
+      }
+    ],
+    "3.2 Write property test for connector-tool provisioning fidelity and idempotence": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228673
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784458620629
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459146328
+      }
+    ],
+    "3.3 Write unit test confirming provisioned tools are listed by ToolSelector-facing query": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228701
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459154621
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464633374
+      }
+    ],
+    "4.1 Implement `reconcile.py`": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228730
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456465951
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784457003978
+      }
+    ],
+    "4.2 Write property test for tool-reference reconciliation completeness": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228760
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459155640
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464630449
+      }
+    ],
+    "4.3 Write unit tests for greeting pre_call_fetch binding and unresolved reference": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228785
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459156639
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464634253
+      }
+    ],
+    "5.1 Implement `scoping.py`": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228813
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456466990
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784457005200
+      }
+    ],
+    "5.2 Write property test for the gate-by-scoping invariant": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228841
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459157680
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464633431
+      }
+    ],
+    "5.3 Write edge-case tests for gate-by-scoping rejection": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228872
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459158216
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464631421
+      }
+    ],
+    "6.1 Implement `masking.py`": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228901
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456467242
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784457005219
+      }
+    ],
+    "6.2 Write property test for sensitive-field masking": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228930
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464641394
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465462348
+      }
+    ],
+    "6.3 Write unit test that enablement logging references sensitive fields by name only": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228958
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464642142
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465464478
+      }
+    ],
+    "7. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456228989
+      },
+      {
+        "executionId": "6df76f72-34fe-4a2d-8138-da66b3ff932e",
+        "chatSessionId": "sess_90f3ebc4-714d-4d92-9c37-8a682ffd092a",
+        "timestamp": 1784474003060
+      },
+      {
+        "executionId": "6df76f72-34fe-4a2d-8138-da66b3ff932e",
+        "chatSessionId": "sess_90f3ebc4-714d-4d92-9c37-8a682ffd092a",
+        "timestamp": 1784474066960
+      }
+    ],
+    "8.1 Implement `config_source.py` and wire it into after-hours evaluation": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229018
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784457017779
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784458608960
+      }
+    ],
+    "8.2 Write property test for empty hotword list matches nothing": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229043
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464643168
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465459453
+      }
+    ],
+    "8.3 Write unit tests for config defaults and representative evaluations": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229070
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464644105
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465460346
+      }
+    ],
+    "8.4 Write smoke test for config plumbing without code changes": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229100
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464644322
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465461340
+      }
+    ],
+    "9.1 Implement `instantiator.py`": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229129
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465471568
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784466759007
+      }
+    ],
+    "9.2 Write property test for trigger identifier freshness": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229157
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784466767335
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784467563563
+      }
+    ],
+    "9.3 Write property test for the tenant-isolation invariant": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229181
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784466768118
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784467564513
+      }
+    ],
+    "9.4 Write property test for instantiation atomic rollback": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229209
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784466769035
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468021201
+      }
+    ],
+    "9.5 Write unit/edge tests for instantiation validation failure and unresolved reference": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229239
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784466770048
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784467565569
+      }
+    ],
+    "10. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229261
+      },
+      {
+        "executionId": "2c55ebdf-601f-4b74-a769-575490d889e6",
+        "chatSessionId": "sess_40c79e00-f3ae-42e5-83e0-cffc25b9af9e",
+        "timestamp": 1784474142189
+      },
+      {
+        "executionId": "2c55ebdf-601f-4b74-a769-575490d889e6",
+        "chatSessionId": "sess_40c79e00-f3ae-42e5-83e0-cffc25b9af9e",
+        "timestamp": 1784474195442
+      }
+    ],
+    "11.1 Add a pipeline-level preservation check helper (if needed)": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229289
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784466770254
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784467566101
+      }
+    ],
+    "11.2 Write property test for speech and prompt preservation": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229320
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468067048
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468384639
+      }
+    ],
+    "12.1 Wire Template_Instantiator into `/templates/duplicate`": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229345
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468068188
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468386179
+      }
+    ],
+    "12.2 Apply masking to tool API responses": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229371
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468068208
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468385663
+      }
+    ],
+    "12.3 Implement tool-binding persistence": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229401
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468393039
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468765352
+      }
+    ],
+    "12.4 Write property test for binding persistence round-trip": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229440
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468772899
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784470872092
+      }
+    ],
+    "12.5 Write integration tests for /templates/duplicate instantiation": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229463
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468773839
+      },
+      {
+        "executionId": "43113c32-45f9-4d2f-9394-bc14e277df70",
+        "chatSessionId": "sess_8999f77f-5f9e-47e0-b3f0-fddac24775dc",
+        "timestamp": 1784471828996
+      }
+    ],
+    "12.6 Write edge-case test for binding persistence failure": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229490
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468774881
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784470873106
+      },
+      {
+        "executionId": "7d88f596-9891-45fd-8fdf-6e0fde5d58dc",
+        "chatSessionId": "sess_2caa0887-c5cc-440d-af8e-8f6358f449ec",
+        "timestamp": 1784474238781
+      },
+      {
+        "executionId": "7d88f596-9891-45fd-8fdf-6e0fde5d58dc",
+        "chatSessionId": "sess_2caa0887-c5cc-440d-af8e-8f6358f449ec",
+        "timestamp": 1784474284023
+      }
+    ],
+    "13.1 Implement the registration entry point": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229518
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464650124
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465464506
+      }
+    ],
+    "13.2 Write unit test for the registration entry point": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229542
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465471592
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784466759035
+      }
+    ],
+    "14. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229570
+      },
+      {
+        "executionId": "76015caa-fdca-44e1-8978-ff170553c373",
+        "chatSessionId": "sess_77183909-0613-45c8-ac73-82fdcbb47d8e",
+        "timestamp": 1784474315402
+      },
+      {
+        "executionId": "76015caa-fdca-44e1-8978-ff170553c373",
+        "chatSessionId": "sess_77183909-0613-45c8-ac73-82fdcbb47d8e",
+        "timestamp": 1784474364522
+      }
+    ],
+    "15.1 Surface a \"welcome recording required\" readiness message": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229594
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468774900
+      },
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784470873085
+      }
+    ],
+    "15.2 Write unit tests for the welcome-audio readiness indicator": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229621
+      },
+      {
+        "executionId": "8af09414-8e0c-4b18-9a3b-5cc72784b4a3",
+        "chatSessionId": "sess_28f473f1-6438-401f-adf9-986e607c3b08",
+        "timestamp": 1784473031213
+      },
+      {
+        "executionId": "8af09414-8e0c-4b18-9a3b-5cc72784b4a3",
+        "chatSessionId": "sess_28f473f1-6438-401f-adf9-986e607c3b08",
+        "timestamp": 1784473338645
+      }
+    ],
+    "16. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229649
+      },
+      {
+        "executionId": "98f1e50f-493f-43d6-bc47-e19e013dd789",
+        "chatSessionId": "sess_b39c7850-7266-47f0-9b42-f4b56b6f238a",
+        "timestamp": 1784474402953
+      },
+      {
+        "executionId": "98f1e50f-493f-43d6-bc47-e19e013dd789",
+        "chatSessionId": "sess_b39c7850-7266-47f0-9b42-f4b56b6f238a",
+        "timestamp": 1784474467216
+      }
+    ],
+    "17.1 Build the template gallery dialog and wire it into CreateWorkflowButton": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229678
+      },
+      {
+        "executionId": "07bf294e-f824-4e4f-8d5a-74bd84e6a30f",
+        "chatSessionId": "sess_bc3527f4-4410-4b89-adb2-e75e7a09cab8",
+        "timestamp": 1784473500567
+      },
+      {
+        "executionId": "07bf294e-f824-4e4f-8d5a-74bd84e6a30f",
+        "chatSessionId": "sess_bc3527f4-4410-4b89-adb2-e75e7a09cab8",
+        "timestamp": 1784473760325
+      }
+    ],
+    "17.2 Write unit tests for CreateFromTemplateDialog": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229707
+      },
+      {
+        "executionId": "07bf294e-f824-4e4f-8d5a-74bd84e6a30f",
+        "chatSessionId": "sess_bc3527f4-4410-4b89-adb2-e75e7a09cab8",
+        "timestamp": 1784473766279
+      },
+      {
+        "executionId": "07bf294e-f824-4e4f-8d5a-74bd84e6a30f",
+        "chatSessionId": "sess_bc3527f4-4410-4b89-adb2-e75e7a09cab8",
+        "timestamp": 1784473987561
+      }
+    ],
+    "18. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784456229731
+      },
+      {
+        "executionId": "524a1479-444d-4e4e-93be-8555a39e1392",
+        "chatSessionId": "sess_4381434c-9972-4cc9-ad75-7098a0fa0eb9",
+        "timestamp": 1784474528845
+      },
+      {
+        "executionId": "524a1479-444d-4e4e-93be-8555a39e1392",
+        "chatSessionId": "sess_4381434c-9972-4cc9-ad75-7098a0fa0eb9",
+        "timestamp": 1784474566122
+      }
+    ],
+    "1. Extract the serialization seam and scaffold the enablement package": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459147268
+      }
+    ],
+    "2. Implement Template_Registrar and the round-trip/idempotence properties": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784459147475
+      }
+    ],
+    "3. Implement Connector_Tool_Provisioner": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464633413
+      }
+    ],
+    "5. Implement UUID-aware gate-by-scoping validation (fail-closed)": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464633470
+      }
+    ],
+    "4. Implement the tool-reference reconciler": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784464634291
+      }
+    ],
+    "8. Implement Switchboard_Config (business hours + hotwords)": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465461383
+      }
+    ],
+    "6. Implement connector-tool masking": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784465464530
+      }
+    ],
+    "13. Add a registration entry point (seed/admin task)": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784466759063
+      }
+    ],
+    "9. Implement Template_Instantiator orchestration with rollback": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468021225
+      }
+    ],
+    "11. Prove speech/prompt preservation across the full pipeline": [
+      {
+        "executionId": "d8747e79-b171-480c-a699-08cdff36fd7e",
+        "chatSessionId": "sess_a9f53814-a3ed-4851-aea6-db3cd586db3e",
+        "timestamp": 1784468384675
+      }
+    ],
+    "15. Add the welcome-audio readiness indicator to the Workflow_Builder": [
+      {
+        "executionId": "8af09414-8e0c-4b18-9a3b-5cc72784b4a3",
+        "chatSessionId": "sess_28f473f1-6438-401f-adf9-986e607c3b08",
+        "timestamp": 1784473338685
+      }
+    ],
+    "17. Implement the Create_Agent_UI template gallery": [
+      {
+        "executionId": "07bf294e-f824-4e4f-8d5a-74bd84e6a30f",
+        "chatSessionId": "sess_bc3527f4-4410-4b89-adb2-e75e7a09cab8",
+        "timestamp": 1784473987607
+      }
+    ],
+    "12. Wire the extended `/templates/duplicate` route and tool-binding persistence": [
+      {
+        "executionId": "7d88f596-9891-45fd-8fdf-6e0fde5d58dc",
+        "chatSessionId": "sess_2caa0887-c5cc-440d-af8e-8f6358f449ec",
+        "timestamp": 1784474284050
+      }
+    ]
+  }
+}

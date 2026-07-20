@@ -167,6 +167,18 @@ function getBadgeForSpec(
 
 // ─── Canvas preview dispatch ──────────────────────────────────────────────
 
+// Welcome-audio readiness (Req 8.4): the Greeting `startCall` node is
+// configured for an audio greeting but has no recording selected yet.
+// Reuses the recording_ref field set by the existing node editor — no new
+// selector/upload UI (Req 8.1-8.3).
+export function needsWelcomeAudioRecording(spec: NodeSpec, data: FlowNodeData): boolean {
+    return (
+        spec.name === "startCall" &&
+        data.greeting_type === "audio" &&
+        !data.greeting_recording_id
+    );
+}
+
 function CanvasPreview({
     spec,
     data,
@@ -276,6 +288,12 @@ function CanvasPreview({
             <p className="text-sm text-muted-foreground line-clamp-5 leading-relaxed">
                 {data.prompt || "No prompt configured"}
             </p>
+            {needsWelcomeAudioRecording(spec, data) && (
+                <div className="mt-3 flex items-center gap-2 rounded-md bg-red-50 p-2 text-xs text-red-600 border border-red-200">
+                    <LucideIcons.AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                    <span>Welcome recording required before the switchboard is ready to run.</span>
+                </div>
+            )}
             {hasToolRefs && data.tool_uuids && data.tool_uuids.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-border/50">
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
