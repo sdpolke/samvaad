@@ -1334,3 +1334,51 @@ class CallbackRequestModel(Base):
     # Relationships
     organization = relationship("OrganizationModel")
     workflow_run = relationship("WorkflowRunModel")
+
+
+class SwitchboardCallLogModel(Base):
+    """Persisted snapshot of the SpinSci switchboard Call State Ledger.
+
+    Written once per call at call-end (finish, error, or hangup). The full
+    ledger is stored as a JSON blob for queryability, alongside denormalized
+    metadata fields for common access patterns (filtering by disposition,
+    workflow, time range).
+    """
+
+    __tablename__ = "switchboard_call_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    workflow_run_id = Column(
+        Integer,
+        ForeignKey("workflow_runs.id", ondelete="CASCADE"),
+        nullable=False,
+        unique=True,
+    )
+    organization_id = Column(
+        Integer,
+        ForeignKey("organizations.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+
+    # Full ledger state snapshot (all 23 Appendix D fields + any extras)
+    ledger = Column(JSON, nullable=False, default=dict)
+
+    # Denormalized fields for fast querying/filtering
+    caller_name = Column(String, nullable=True)
+    intent = Column(String, nullable=True)
+    disposition = Column(String, nullable=True)
+    after_hours = Column(Boolean, nullable=False, default=False)
+    end_reason = Column(String, nullable=True)  # pipeline_finished / user_hangup / pipeline_error
+
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
+
+    # Relationships
+    workflow_run = relationship("WorkflowRunModel")
+    organization = relationship("OrganizationModel")
+
+    __table_args__ = (
+        Index("ix_switchboard_call_logs_org_id", "organization_id"),
+        Index("ix_switchboard_call_logs_created_at", "created_at"),
+        Index("ix_switchboard_call_logs_intent", "intent"),
+        Index("ix_switchboard_call_logs_disposition", "disposition"),
+    )

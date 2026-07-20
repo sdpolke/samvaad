@@ -175,4 +175,60 @@ async def process_workflow_completion(
     except Exception as e:
         logger.error(f"Error calculating cost for workflow {workflow_run_id}: {e}")
 
+    # Step 5: Persist switchboard call log (ledger snapshot) if ledger fields present
+    try:
+        await _persist_switchboard_call_log(workflow_run_id)
+    except Exception as e:
+        logger.error(
+            f"Error persisting switchboard call log for workflow {workflow_run_id}: {e}"
+        )
+
     logger.info(f"Completed workflow completion processing for run {workflow_run_id}")
+
+
+async def _persist_switchboard_call_log(workflow_run_id: int) -> None:
+    """Extract ledger fields from gathered_context and persist to switchboard_call_logs.
+
+    Only writes a row if at least one ledger field is populated in the run's
+    gathered_context (i.e., this was a switchboard call, not a generic workflow run).
+    Failures are logged but never propagate — ledger persistence is best-effort.
+    """
+    from api.services.switchboard.ledger import LEDGER_FIELD_NAMES
+
+    workflow_run = await db_client.get_workflow_run_by_id(workflow_run_id)
+    if not workflow_run:
+        return
+
+    gathered = workflow_run.gathered_context or {}
+
+    # Only persist if this run has switchboard ledger fields
+    ledger_data = {k: gathered.get(k) for k in LEDGER_FIELD_NAMES if k in gathered}
+    if not ledger_data:
+        return
+
+    # Also capture disposition and end-reason from gathered_context
+    ledger_data["call_disposition"] = gathered.get("call_disposition")
+    ledger_data["mapped_call_disposition"] = gathered.get("mapped_call_disposition")
+
+    # Determine organization_id from the workflow
+    organization_id = None
+    if workflow_run.workflow_id:
+        workflow = await db_client.get_workflow_by_id(workflow_run.workflow_id)
+        if workflow:
+            organization_id = workflow.organization_id
+
+    if not organization_id:
+        logger.warning(
+            f"Cannot persist switchboard call log for run {workflow_run_id}: "
+            "no organization_id resolved"
+        )
+        return
+
+    end_reason = gathered.get("call_disposition") or "unknown"
+
+    await db_client.create_switchboard_call_log(
+        workflow_run_id=workflow_run_id,
+        organization_id=organization_id,
+        ledger=ledger_data,
+        end_reason=end_reason,
+    )

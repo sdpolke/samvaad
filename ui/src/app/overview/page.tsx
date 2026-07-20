@@ -23,7 +23,14 @@ export default function OverviewPage() {
         <div className="container mx-auto px-4 py-8">
             <div className="mx-auto max-w-5xl space-y-8">
                 {/* Gradient hero */}
-                <section className="spinsci-hero relative overflow-hidden rounded-2xl px-8 py-12 text-white shadow-sm sm:px-12">
+                <section
+                    className="relative overflow-hidden rounded-2xl px-8 py-12 text-white shadow-sm sm:px-12"
+                    style={{
+                        backgroundColor: "#0b1424",
+                        backgroundImage:
+                            "radial-gradient(circle at 100% 100%, rgba(221,35,187,0.28), transparent 42%), radial-gradient(circle at 0% 100%, rgba(45,98,255,0.32), transparent 58%), radial-gradient(circle at 50% 0%, rgba(92,224,176,0.18), transparent 55%)",
+                    }}
+                >
                     <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white/80">
                         <Phone className="h-3.5 w-3.5" />
                         Voice AI for Patient Access
@@ -62,7 +69,10 @@ export default function OverviewPage() {
                         </Button>
                     </div>
 
-                    <div className="spinsci-gradient-rule mt-10 h-px w-full opacity-70" />
+                    <div
+                        className="mt-10 h-px w-full opacity-70"
+                        style={{ backgroundImage: "linear-gradient(90deg,#00e9aa,#6486ff 33%,#7759d9 66%,#43226d)" }}
+                    />
 
                     {/* Voice agent capabilities */}
                     <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

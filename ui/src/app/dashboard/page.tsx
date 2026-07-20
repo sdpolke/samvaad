@@ -152,7 +152,9 @@ export default function DashboardPage() {
                 <div>
                     <h1 className="text-3xl font-bold">
                         Call{" "}
-                        <span className="spinsci-gradient-text">Analytics</span>
+                        <span className="bg-gradient-to-r from-[#7759d9] to-[#2ac6ff] bg-clip-text text-transparent">
+                            Analytics
+                        </span>
                     </h1>
                     <p className="mt-1 text-muted-foreground">
                         A live pulse on patient access voice agents across your organization.
@@ -167,7 +169,10 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {KPIS.map(({ label, value, delta, up, icon: Icon, sub }) => (
                     <Card key={label} className="overflow-hidden">
-                        <div className="spinsci-gradient h-1 w-full" />
+                        <div
+                            className="h-1 w-full"
+                            style={{ backgroundImage: "linear-gradient(90deg,#00e9aa,#6486ff 33%,#7759d9 66%,#43226d)" }}
+                        />
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium text-muted-foreground">
                                 {label}
