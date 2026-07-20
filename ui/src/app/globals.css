@@ -45,38 +45,51 @@
 }
 
 :root {
+  /* SpinSci brand palette (from spinsci.ai) */
+  --spinsci-purple: #7759d9;
+  --spinsci-violet: #43226d;
+  --spinsci-blue: #122643;
+  --spinsci-navy: #091322;
+  --spinsci-periwinkle: #6486ff;
+  --spinsci-green: #5ce0b0;
+  --spinsci-teal: #00e9aa;
+  --spinsci-dark-green: #04867c;
+  --spinsci-sky: #2ac6ff;
+  --spinsci-focus: #2d62ff;
+  --spinsci-grey: #f7f6f5;
+
   --radius: 0.625rem;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --primary: #7759d9;
+  --primary-foreground: #ffffff;
+  --secondary: #f2eefb;
+  --secondary-foreground: #43226d;
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: #f2eefb;
+  --accent-foreground: #43226d;
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --ring: #7759d9;
+  --chart-1: #7759d9;
+  --chart-2: #04867c;
+  --chart-3: #6486ff;
+  --chart-4: #2ac6ff;
+  --chart-5: #43226d;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-primary: #7759d9;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f2eefb;
+  --sidebar-accent-foreground: #43226d;
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: #7759d9;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: #091322;
 }
 
 .dark {
@@ -86,31 +99,31 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: #9b82e8;
+  --primary-foreground: #0b0618;
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: #241a3d;
+  --accent-foreground: #e6ddfb;
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
+  --ring: #9b82e8;
+  --chart-1: #9b82e8;
+  --chart-2: #5ce0b0;
+  --chart-3: #6486ff;
+  --chart-4: #2ac6ff;
+  --chart-5: #c9b6ff;
+  --sidebar: #0f1a2e;
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-primary: #9b82e8;
+  --sidebar-primary-foreground: #0b0618;
+  --sidebar-accent: #1c2942;
+  --sidebar-accent-foreground: #e6ddfb;
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: #9b82e8;
 }
 
 @layer base {
@@ -134,4 +147,46 @@
 
 .animate-spin-slow {
   animation: spin-slow 3s linear infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   SpinSci brand helpers (gradients + logo treatment) sourced from spinsci.ai
+--------------------------------------------------------------------------- */
+
+/* Signature multi-stop brand gradient: teal -> periwinkle -> purple -> violet */
+.spinsci-gradient {
+  background-image: linear-gradient(90deg, #00e9aa, #6486ff 33%, #7759d9 66%, #43226d);
+}
+
+/* Heading gradient text (purple -> deep blue) */
+.spinsci-gradient-text {
+  background-image: linear-gradient(94deg, #5136a9, #122643);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.dark .spinsci-gradient-text {
+  background-image: linear-gradient(94deg, #b9a6ff, #6486ff);
+}
+
+/* Hero surface: deep navy with radial brand glows, like the spinsci.ai header */
+.spinsci-hero {
+  background-color: #0b1424;
+  background-image:
+    radial-gradient(circle at 100% 100%, rgba(221, 35, 187, 0.28), transparent 42%),
+    radial-gradient(circle at 0% 100%, rgba(45, 98, 255, 0.32), transparent 58%),
+    radial-gradient(circle at 50% 0%, rgba(92, 224, 176, 0.18), transparent 55%);
+}
+
+/* Thin gradient rule / underline */
+.spinsci-gradient-rule {
+  background-image: linear-gradient(90deg, #00e9aa, #6486ff 33%, #7759d9 66%, #43226d);
+}
+
+/* 1px gradient border wrapper (pad 1px, put a solid child inside) */
+.spinsci-gradient-border {
+  background-image: linear-gradient(120deg, #00e9aa, #6486ff 33%, #7759d9 66%, #43226d);
+  padding: 1px;
 }

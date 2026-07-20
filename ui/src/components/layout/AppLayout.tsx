@@ -19,10 +19,14 @@ function AppHeader() {
         <Button variant="ghost" size="icon" onClick={toggleSidebar} aria-label="Open menu" className="md:hidden">
           <Menu className="h-5 w-5" />
         </Button>
-        <Link href="/" className="flex items-center gap-2 text-lg font-bold md:hidden">
+        <Link href="/" className="flex items-center gap-2 md:hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Samvaad" width={24} height={24} className="rounded" />
-          Samvaad
+          <img
+            src="/spinsci-logo.svg"
+            alt="SpinSci"
+            height={22}
+            className="h-[22px] w-auto rounded-md bg-white px-1.5 py-1 shadow-sm"
+          />
         </Link>
       </div>
     </header>

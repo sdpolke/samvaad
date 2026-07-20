@@ -28,8 +28,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Samvaad",
-  description: "Open Source Voice Assistant Workflow Builder",
+  title: "SpinSci Voice AI",
+  description: "Voice AI agents for patient access - scheduling, billing, pharmacy, and referrals resolved end to end.",
 };
 
 export default function RootLayout({

@@ -11,6 +11,7 @@ import {
   Database,
   FileText,
   Home,
+  LayoutDashboard,
   LogOut,
   type LucideIcon,
   Megaphone,
@@ -122,6 +123,11 @@ const NAV_SECTIONS: SidebarNavSection[] = [
   {
     label: "OBSERVE",
     items: [
+      {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: LayoutDashboard,
+      },
       {
         title: "Agent Runs",
         url: "/usage",
@@ -238,12 +244,16 @@ export function AppSidebar() {
           <div className={cn("flex items-center gap-2", isCollapsed && "hidden")}>
             <Link
               href="/"
-              className="notranslate flex items-center gap-2 px-2 text-xl font-bold"
+              className="notranslate flex items-center gap-2 px-1"
               translate="no"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Samvaad" width={28} height={28} className="rounded" />
-              Samvaad
+              <img
+                src="/spinsci-logo.svg"
+                alt="SpinSci"
+                height={24}
+                className="h-6 w-auto rounded-md bg-white px-2 py-1 shadow-sm"
+              />
             </Link>
           </div>
 
